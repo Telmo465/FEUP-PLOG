@@ -21,7 +21,7 @@
 
 - Situação Inicial:
 
-    initialBoard([
+-   initialBoard([
     [empty,empty,empty,empty,empty,empty],
     [empty,empty,empty,empty,empty,empty],
     [empty,empty,empty,empty,empty,empty],
@@ -31,7 +31,7 @@
     ]).
 
 
-        | 1 | 2 | 3 | 4 | 5 | 6 |
+-       | 1 | 2 | 3 | 4 | 5 | 6 |
      ---|---+---+---+---+---+---|
       A |   |   |   |   |   |   |
      ---|---+---+---+---+---+---|
@@ -46,9 +46,10 @@
       F |   |   |   |   |   |   |
      ---|---+---+---+---+---+---|
 
+
 - Situação Intermédia:
 
-    midBoard([
+-   midBoard([
     [red,empty,black,empty,black,empty],
     [empty,empty,empty,empty,empty,empty],
     [black,empty,empty,red,empty,empty],
@@ -58,7 +59,7 @@
     ]).
 
 
-        | 1 | 2 | 3 | 4 | 5 | 6 |
+-       | 1 | 2 | 3 | 4 | 5 | 6 |
      ---|---+---+---+---+---+---|
       A | O |   | X |   | X |   |
      ---|---+---+---+---+---+---|
@@ -73,9 +74,10 @@
       F |   |   |   |   | O |   |
      ---|---+---+---+---+---+---|
 
+
 - Situação Final:
 
-        finalBoard([
+-   finalBoard([
     [empty,empty,empty,red,empty,empty],
     [empty,empty,empty,empty,empty,empty],
     [empty,black,empty,empty,red,empty],
@@ -84,8 +86,7 @@
     [empty,empty,empty,empty,empty,red]
     ]).
 
-
-        | 1 | 2 | 3 | 4 | 5 | 6 |
+-       | 1 | 2 | 3 | 4 | 5 | 6 |
      ---|---+---+---+---+---+---|
       A |   |   |   | O |   |   |
      ---|---+---+---+---+---+---|
