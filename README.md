@@ -22,81 +22,81 @@
 - Situação Inicial:
 
 -   initialBoard([
-    [empty,empty,empty,empty,empty,empty],
-    [empty,empty,empty,empty,empty,empty],
-    [empty,empty,empty,empty,empty,empty],
-    [empty,empty,empty,empty,empty,empty],
-    [empty,empty,empty,empty,empty,empty],
-    [empty,empty,empty,empty,empty,empty]
+    [empty,empty,empty,empty,empty,empty],  
+    [empty,empty,empty,empty,empty,empty],  
+    [empty,empty,empty,empty,empty,empty],  
+    [empty,empty,empty,empty,empty,empty],  
+    [empty,empty,empty,empty,empty,empty],  
+    [empty,empty,empty,empty,empty,empty]  
     ]).
 
 
--       | 1 | 2 | 3 | 4 | 5 | 6 |
-     ---|---+---+---+---+---+---|
-      A |   |   |   |   |   |   |
-     ---|---+---+---+---+---+---|
-      B |   |   |   |   |   |   |
-     ---|---+---+---+---+---+---|
-      C |   |   |   |   |   |   |
-     ---|---+---+---+---+---+---|
-      D |   |   |   |   |   |   |
-     ---|---+---+---+---+---+---|
-      E |   |   |   |   |   |   |
-     ---|---+---+---+---+---+---|
-      F |   |   |   |   |   |   |
-     ---|---+---+---+---+---+---|
+-       | 1 | 2 | 3 | 4 | 5 | 6 |  
+     ---|---+---+---+---+---+---|  
+      A |   |   |   |   |   |   |  
+     ---|---+---+---+---+---+---|  
+      B |   |   |   |   |   |   |  
+     ---|---+---+---+---+---+---|  
+      C |   |   |   |   |   |   |  
+     ---|---+---+---+---+---+---|  
+      D |   |   |   |   |   |   |  
+     ---|---+---+---+---+---+---|  
+      E |   |   |   |   |   |   |  
+     ---|---+---+---+---+---+---|  
+      F |   |   |   |   |   |   |  
+     ---|---+---+---+---+---+---|   
 
 
 - Situação Intermédia:
 
 -   midBoard([
-    [red,empty,black,empty,black,empty],
-    [empty,empty,empty,empty,empty,empty],
-    [black,empty,empty,red,empty,empty],
-    [empty,empty,empty,empty,empty,black],
-    [empty,red,empty,empty,empty,empty],
-    [empty,empty,empty,empty,red,empty]
+    [red,empty,black,empty,black,empty],  
+    [empty,empty,empty,empty,empty,empty],  
+    [black,empty,empty,red,empty,empty],  
+    [empty,empty,empty,empty,empty,black],  
+    [empty,red,empty,empty,empty,empty],  
+    [empty,empty,empty,empty,red,empty]  
     ]).
 
 
--       | 1 | 2 | 3 | 4 | 5 | 6 |
-     ---|---+---+---+---+---+---|
-      A | O |   | X |   | X |   |
-     ---|---+---+---+---+---+---|
-      B |   |   |   |   |   |   |
-     ---|---+---+---+---+---+---|
-      C | X |   |   | O |   |   |
-     ---|---+---+---+---+---+---|
-      D |   |   |   |   |   | X |
-     ---|---+---+---+---+---+---|
-      E |   | O |   |   |   |   |
-     ---|---+---+---+---+---+---|
-      F |   |   |   |   | O |   |
-     ---|---+---+---+---+---+---|
+-       | 1 | 2 | 3 | 4 | 5 | 6 |  
+     ---|---+---+---+---+---+---|  
+      A | O |   | X |   | X |   |  
+     ---|---+---+---+---+---+---|  
+      B |   |   |   |   |   |   |  
+     ---|---+---+---+---+---+---|  
+      C | X |   |   | O |   |   |  
+     ---|---+---+---+---+---+---|  
+      D |   |   |   |   |   | X |  
+     ---|---+---+---+---+---+---|  
+      E |   | O |   |   |   |   |  
+     ---|---+---+---+---+---+---|  
+      F |   |   |   |   | O |   |  
+     ---|---+---+---+---+---+---|  
 
 
 - Situação Final:
 
 -   finalBoard([
-    [empty,empty,empty,red,empty,empty],
-    [empty,empty,empty,empty,empty,empty],
-    [empty,black,empty,empty,red,empty],
-    [empty,empty,black,empty,empty,empty],
-    [red,empty,empty,black,empty,empty],
-    [empty,empty,empty,empty,empty,red]
+    [empty,empty,empty,red,empty,empty],  
+    [empty,empty,empty,empty,empty,empty],  
+    [empty,black,empty,empty,red,empty],  
+    [empty,empty,black,empty,empty,empty],  
+    [red,empty,empty,black,empty,empty],  
+    [empty,empty,empty,empty,empty,red]  
     ]).
 
--       | 1 | 2 | 3 | 4 | 5 | 6 |
-     ---|---+---+---+---+---+---|
-      A |   |   |   | O |   |   |
-     ---|---+---+---+---+---+---|
-      B |   |   |   |   |   |   |
-     ---|---+---+---+---+---+---|
-      C |   | X |   |   | O |   |
-     ---|---+---+---+---+---+---|
-      D |   |   | X |   |   |   |
-     ---|---+---+---+---+---+---|
-      E | O |   |   | X |   |   |
-     ---|---+---+---+---+---+---|
-      F |   |   |   |   |   | O |
-     ---|---+---+---+---+---+---|
+-       | 1 | 2 | 3 | 4 | 5 | 6 |  
+     ---|---+---+---+---+---+---|  
+      A |   |   |   | O |   |   |  
+     ---|---+---+---+---+---+---|  
+      B |   |   |   |   |   |   |  
+     ---|---+---+---+---+---+---|  
+      C |   | X |   |   | O |   |  
+     ---|---+---+---+---+---+---|  
+      D |   |   | X |   |   |   |  
+     ---|---+---+---+---+---+---|  
+      E | O |   |   | X |   |   |  
+     ---|---+---+---+---+---+---|  
+      F |   |   |   |   |   | O |  
+     ---|---+---+---+---+---+---|  
