@@ -23,6 +23,7 @@ letter(6, L) :- L='F'.
 
 
 printBoard(X) :-
+	initialBoard(X),
     nl,
     write('   | 1 | 2 | 3 | 4 | 5 | 6 |\n'),
     write('---|---+---+---+---+---+---|\n'),
@@ -33,10 +34,10 @@ printMatrix([], 7).
 
 printMatrix([Head|Tail], N) :-
     letter(N, L),
-    write(' '),
+	write(' '),
     write(L),
+	write(' | '),
     N1 is N +1,
-    write(' |   |   |   |   |   |   |'),
     printLine(Head),
     write('\n---|---+---+---+---+---+---|\n'), 
     printMatrix(Tail, N1).
