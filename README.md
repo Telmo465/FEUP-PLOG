@@ -21,7 +21,7 @@
 ## Representação interna do estado do jogo
 
 - Situação Inicial:
-
+```
 -   initialBoard([  
     [empty,empty,empty,empty,empty,empty],  
     [empty,empty,empty,empty,empty,empty],  
@@ -30,8 +30,7 @@
     [empty,empty,empty,empty,empty,empty],  
     [empty,empty,empty,empty,empty,empty]  
     ]).  
-
-{}
+```
 
         | 1 | 2 | 3 | 4 | 5 | 6 |  
      ---|---+---+---+---+---+---|  
@@ -51,6 +50,8 @@
 
 - Situação Intermédia:
 
+```  
+
 -   midBoard([  
     [red,empty,black,empty,black,empty],  
     [empty,empty,empty,empty,empty,empty],  
@@ -59,8 +60,8 @@
     [empty,red,empty,empty,empty,empty],  
     [empty,empty,empty,empty,red,empty]  
     ]).
-  
-{}  
+
+```    
    
         | 1 | 2 | 3 | 4 | 5 | 6 |  
      ---|---+---+---+---+---+---|  
@@ -80,6 +81,8 @@
 
 - Situação Final:
 
+```  
+
 -   finalBoard([  
     [empty,empty,empty,red,empty,empty],  
     [empty,empty,empty,empty,empty,empty],  
@@ -88,8 +91,8 @@
     [red,empty,empty,black,empty,empty],  
     [empty,empty,empty,empty,empty,red]  
     ]).
-  
-{}  
+
+``` 
 
         | 1 | 2 | 3 | 4 | 5 | 6 |  
      ---|---+---+---+---+---+---|  
