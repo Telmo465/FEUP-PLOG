@@ -1,3 +1,6 @@
+:-consult('input.pl').
+
+
 initialBoard([
 [empty,empty,empty,empty,empty,empty],
 [empty,empty,empty,empty,empty,empty],
@@ -23,7 +26,6 @@ letter(6, L) :- L='F'.
 
 
 printBoard(X) :-
-	initialBoard(X),
     nl,
     write('   | 1 | 2 | 3 | 4 | 5 | 6 |\n'),
     write('---|---+---+---+---+---+---|\n'),
@@ -49,11 +51,6 @@ printLine([Head|Tail]) :-
     write(S),
     write(' | '),
     printLine(Tail).
-
-
-
-
-
 
 
 
