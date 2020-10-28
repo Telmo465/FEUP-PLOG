@@ -1,7 +1,7 @@
 
 # PLOG 2020/2021 - TP1
 
-## Groupo: T04GGekitai4
+## Groupo: T04Gekitai4
 
 
 | Name             | Number    | E-Mail                |

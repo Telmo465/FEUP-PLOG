@@ -5,60 +5,75 @@ readRow(Row, NewRow):-
 	rowValid(Row, NewRow).
 	
 readColumn(Column, NewColumn):-
-	write('Column: '),
+	write('Column:'),
 	read(Column),
 	columnValid(Column, NewColumn).
 	
 
-rowValid('A', NewRow):-
+rowValid(1, NewRow):-
 	NewRow = 1.
 
-rowValid('B', NewRow):-
+rowValid(2, NewRow):-
 	NewRow = 2.
 
-rowValid('C', NewRow):-
+rowValid(3, NewRow):-
 	NewRow = 3.
 
-rowValid('D', NewRow):-
+rowValid(4, NewRow):-
 	NewRow = 4.
 
-rowValid('E', NewRow):-
+rowValid(5, NewRow):-
 	NewRow = 5.
 
-rowValid('F', NewRow):-
+rowValid(6, NewRow):-
 	NewRow = 6.
 
-rowValid('G', NewRow):-
+rowValid(7, NewRow):-
 	NewRow = 7.
 
-rowValid('H', NewRow):-
+rowValid(8, NewRow):-
 	NewRow = 8.
 
 
-columnValid(1, NewColumn):-
+columnValid('A', NewColumn):-
+	NewColumn = 1.
+columnValid(a, NewColumn):-
 	NewColumn = 1.
 	
-columnValid(2, NewColumn):-
+columnValid('B', NewColumn):-
+	NewColumn = 2.
+columnValid(b , NewColumn):-
 	NewColumn = 2.
 	
-columnValid(3, NewColumn):-
+columnValid('C', NewColumn):-
+	NewColumn = 3.
+columnValid(c, NewColumn):-
 	NewColumn = 3.
 	
-columnValid(4, NewColumn):-
+columnValid('D', NewColumn):-
+	NewColumn = 4.
+columnValid(d, NewColumn):-
 	NewColumn = 4.
 	
-columnValid(5, NewColumn):-
+columnValid('E', NewColumn):-
+	NewColumn = 5.
+columnValid(e, NewColumn):-
 	NewColumn = 5.
 	
-columnValid(6, NewColumn):-
+columnValid('F', NewColumn):-
+	NewColumn = 6.
+columnValid(f, NewColumn):-
 	NewColumn = 6.
 	
-columnValid(7, NewColumn):-
+columnValid('G', NewColumn):-
+	NewColumn = 7.
+columnValid(g, NewColumn):-
 	NewColumn = 7.
 	
-columnValid(8, NewColumn):-
+columnValid('H', NewColumn):-
 	NewColumn = 8.
-	
+columnValid(h, NewColumn):-
+	NewColumn = 8.
 	
 
 
