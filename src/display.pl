@@ -1,6 +1,5 @@
 :-consult('input.pl').
 
-
 initialBoard([
 [empty,empty,empty,empty,empty,empty],
 [empty,empty,empty,empty,empty,empty],
@@ -12,9 +11,12 @@ initialBoard([
 
 
 /*pieces symbols*/
+symbol(1,S) :- S='Black'.
+symbol(2,S) :- S='Red'.
 symbol(empty,S) :- S=' '.
-symbol(black,S) :- S='X'.
-symbol(red,S) :- S='O'.
+symbol('Black',S) :- S='X'.
+symbol('Red',S) :- S='O'.
+
 
 
 letter(1, L) :- L='1'.

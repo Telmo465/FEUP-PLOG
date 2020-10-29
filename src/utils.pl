@@ -1,17 +1,16 @@
 :-consult('display.pl').
-:-consult('input.pl').
 
-readMove(Row, Column):-
-	readRow(Row, NewRow),
-	readColumn(Column, NewColumn),
-	makeMove(InitialMatrix, NewRow, NewColumn, black, FinalMatrix).
+readMove(Row, Column, ValidRow, ValidCol):-
+	readRow(Row, ValidRow),
+	readColumn(Column, ValidCol).
+	/*makeMove(InitialMatrix, NewRow, NewColumn, black, FinalMatrix).*/
 
 
 makeMove(InitialMatrix,R,C,Val,FinalMatrix):-
-	initialBoard(InitialMatrix),
-	printBoard(InitialMatrix),
-	playRow(R,InitialMatrix,C,Val,FinalMatrix),
-	printBoard(FinalMatrix).
+	/*initialBoard(InitialMatrix),
+	printBoard(InitialMatrix),*/
+	playRow(R,InitialMatrix,C,Val,FinalMatrix).
+	/*printBoard(FinalMatrix).*/
 	
 playRow(1,[Row|RestRow],C,Val,[NewRow|RestRow]):-
 	playColumn(C,Row,Val,NewRow).
