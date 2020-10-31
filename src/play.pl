@@ -1,7 +1,10 @@
 :-consult('utils.pl').
 :-dynamic(state/2).
 
-play(Player1, Player2):-
+play/0:-
+	game_loop(X,Y).
+
+game_loop(Player1, Player2):-
 	initial(GameState),
 	assert(move(1,Player1)),
     assert(move(2,Player2)),
@@ -9,7 +12,7 @@ play(Player1, Player2):-
 	printBoard(GameState),
 	repeat,
 		retract(state(Player, Board)),
-		write('After retract'),nl,
+		%write('After retract'),nl,
 		once(playMove(Player, NextPlayer ,Board, NewBoard)),
 		assert(state(NextPlayer, NewBoard)),
 		display_game(NewBoard, NextPlayer),
