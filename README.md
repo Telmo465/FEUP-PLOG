@@ -17,14 +17,14 @@
  - In order to win, one of the players must align 3 of their pieces in a row horizontally, vertically or in diagonal, or to have their 8 pieces on the board after making a move.
  -   However, it is not that easy to reach the goal because whenever a piece is placed, it “pushes” any adjacent piece that is free (not aligned by two or more pieces), pieces that fall from the board return to the players.
  - 
-	**Material**
-		- Board 6 * 6;
+	**Material**  
+		- Board 6 * 6;  
 		- 16 Markers (8 of each color);
 			
  - [source](https://boardgamegeek.com/boardgame/295449/gekitai)
 
 ----
-## ## Internal representation of the GameState
+## Internal representation of the GameState
 
 **Board**
  * The board is represented by a list of lists, where each internal list represents a row of the board. Each cell can be an empty space, a red piece or a black piece.
