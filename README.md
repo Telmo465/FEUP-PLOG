@@ -1,4 +1,5 @@
 
+  
 # PLOG 2020/2021 - TP1
 
 ## Group: T4_Gekitai4
@@ -22,6 +23,8 @@
 		- 16 Markers (8 of each color);
 			
  - [source](https://boardgamegeek.com/boardgame/295449/gekitai)
+ - [board](https://s3.amazonaws.com/geekdo-files.com/bgg260973?response-content-disposition=inline%3B%20filename%3D%22Gekitai_Generic_Board.pdf%22&response-content-type=application%2Fpdf&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJYFNCT7FKCE4O6TA%2F20201101%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201101T162309Z&X-Amz-SignedHeaders=host&X-Amz-Expires=120&X-Amz-Signature=5658ba23308bf6e840e5040dc421f7ac9c108a34c7f8392e0a40ae4e60769bb1)
+ - [rules](https://s3.amazonaws.com/geekdo-files.com/bgg260437?response-content-disposition=inline%3B%20filename%3D%22Gekitai_Rules.pdf%22&response-content-type=application%2Fpdf&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJYFNCT7FKCE4O6TA%2F20201101%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201101T160235Z&X-Amz-SignedHeaders=host&X-Amz-Expires=120&X-Amz-Signature=9e06a7d642935f212181bfdeb63632a8fa21ebc2070973ab2fb2ae625009a0da)
 
 ----
 ## Internal representation of the GameState
@@ -140,5 +143,3 @@
 		 ![Intermediate State](img/mid_state.png)
 * Final State:
 		 ![Final State](img/final_state.png)
-
-
