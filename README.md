@@ -42,8 +42,19 @@
     ]
     ```  
  **Player**
- * Each player and empty cells are represented by a string. One colour is assigned for each player, 'Red' and 'Black'. A empty cell is just a space, " " . 
- 
+ * Each player and empty cells are represented by an atom. Each player gets assigned with a color, black or red. An empty cell is just a space, " " . 
+ * To improve interface usability, we write the current player in the display_game predicate.
+ * 
+ **Game Loop**
+ * In Gekitai, the player with the black pieces starts first, followed by the player with the red pieces, beginning a game loop that lasts until the end of the game.
+ * The processing of the game loop is done in the following way:
+	- Initially, we call the predicate initial(GameState), to initialize an empty board, and assert that the player with the black pieces goes first;
+	- Inside the loop section, we retrieve information containing the current player and board;
+	- Call the "playMove" predicate, responsible for replacing empty cells for "X" or "0" cells, depending on the player;
+	- Receive information about the next player from "playMove";
+	- Finally, every iteration of the loop displays the current state of the board.
+* The loop repeats itself until one of the players win (this verification is not yet implemented in the source code).
+
 **GameStates**
  * **Initial Situation** 
 
@@ -127,7 +138,7 @@
 
 ## GameState Visualization
 
- * The board is printed with the call of the predicate `printBoard(X)`, that calls the predicate `printMatrix`. 
+ * The board is printed with a call to the predicate `printBoard(X)`, that calls the predicate `printMatrix`. 
  * `printMatrix([Head|Tail], N)` is a recursive predicate, that calls `printLine([])`, also recursively, that prints each cell.
  * For a better display, we convert the values of the list for symbols "X", "O", and " ", respectively there are 'Black Player', 'Red Player' and empty cell.
 	``` 
@@ -143,3 +154,17 @@
 		 ![Intermediate State](img/mid_state.png)
 * Final State:
 		 ![Final State](img/final_state.png)
+
+
+## Notes
+
+* In order to execute the program, please follow the next steps:
+	- load src/gekitai.pl in SICStus;
+	- type "play." to start the game;
+		-  The row inputs are given as numbers (1 - 6),
+		- The column inputs are given as letters ('A' - 'F');
+	- We implemented the following predicates to display possible boards that might occur during a game.
+		- type "initial." to display the initial state of the board;
+		- type "intermediate." to display the intermediate state of the board;
+		- type "final." to display the final state of the board;
+ 

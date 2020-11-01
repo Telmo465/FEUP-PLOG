@@ -1,46 +1,46 @@
 :-consult('utils.pl').
 :-dynamic(state/2).
 
-play/0:-
+play:-
 	game_loop(X,Y).
 
+%implements the main loop of the game
 game_loop(Player1, Player2):-
 	initial(GameState),
 	assert(move(1,Player1)),
     assert(move(2,Player2)),
-    assert(state(1,GameState)),
-	printBoard(GameState),
+    assert(state(1,GameState)), %asserts that the player 1 plays first
+	display_game(GameState, 1), 
 	repeat,
 		retract(state(Player, Board)),
-		%write('After retract'),nl,
-		once(playMove(Player, NextPlayer ,Board, NewBoard)),
+		once(playMove(Player, NextPlayer ,Board, NewBoard)), %replaces an empty cell with the respective player piece
 		assert(state(NextPlayer, NewBoard)),
-		display_game(NewBoard, NextPlayer),
-		1>2,
+		display_game(NewBoard, NextPlayer), % displays the current state of the board
+		checkWinner, % checks if the game has ended --> //TO IMPLEMENT
 	endGame.
 
 	
 
 initial(GameState):-
 	initialBoard(GameState).
-	%printBoard(GameState).
 	
 	
 display_game(GameState, Player):-
+	write('Current player: '),
+	symbol(Player, Str),
+	write(Str),nl,
 	printBoard(GameState).
-	
+
+
 repeat.
 repeat:-
 	repeat.	
 
 
 
-	
+%reads input and makes the respective move on the board
 playMove(Player, NextPlayer, State, NewState):-
-	write('Current player: '),
-	symbol(Player, Str),
-	write(Str),nl,
-	readMove(Row, Col, ValidRow, ValidCol),
+	readMove(Row, Col, ValidRow, ValidCol), 
 	symbol(Player, S),
 	makeMove(State, ValidRow, ValidCol, S, NewState),
 
@@ -55,4 +55,8 @@ playMove(Player, NextPlayer, State, NewState):-
 	).
 
 
-endGame.
+checkWinner:- %TO IMPLEMENT
+	fail.
+
+
+endGame. %TO IMPLEMENT

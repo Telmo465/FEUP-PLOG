@@ -2,6 +2,6 @@
 :-use_module(library(lists)).
 
 gekitai :-
-	play(X,Y).
+	game_loop(X,Y).
 
 
