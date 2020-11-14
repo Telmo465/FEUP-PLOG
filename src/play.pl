@@ -42,8 +42,8 @@ repeat:-
 playMove(Player, NextPlayer, State, NewState):-
 	readMove(Row, Col, ValidRow, ValidCol, State), 
 	symbol(Player, S),
-	makeMove(State, ValidRow, ValidCol, S, NewState),
-	%repulsion(TempState, NewState, ValidRow, ValidCol),
+	makeMove(State, ValidRow, ValidCol, S, TempState),
+	once(repulsion(TempState, NewState, ValidRow, ValidCol)),
 
 	(
 		(Player =:= 1,
@@ -145,6 +145,15 @@ verifyPieces(BoardList, Index, Piece, Counter):-
 	NewIndex is Index+1,
 	verifyPieces(BoardList, NewIndex, Piece, NewCounter).
 
+
+checkTopLeftPiece(Board,NewBoard,1,_):-
+	NewBoard = Board.
+
+
+checkTopLeftPiece(Board,NewBoard,_,1):-
+	NewBoard = Board.
+
+
 checkTopLeftPiece(Board, NewBoard, Row, Column):-
 	Column > 2,
 	Row > 2,
@@ -156,15 +165,188 @@ checkTopLeftPiece(Board, NewBoard, Row, Column):-
 	%write(NextAuxCol),nl,
 	getSquarePiece(AuxCol, AuxRow, Piece, Board),
 	getSquarePiece(NextAuxCol,NextAuxRow, NextPiece, Board),
-	write(Piece),nl,
-	write(NextPiece),nl.
+	%write(Piece),nl,
+	%write(NextPiece),nl,
+	(
+		((Piece \= 'empty', NextPiece == 'empty') -> (makeMove(Board, NextAuxRow, NextAuxCol, Piece, TempBoard), makeMove(TempBoard, AuxRow, AuxCol, 'empty', NewBoard))) ; NewBoard = Board
+	).
 	
-	
-	
+checkTopLeftPiece(Board, NewBoard, Row, Column):-
+	Column > 1,
+	Row > 1,
+	AuxCol is Column-1,
+	AuxRow is Row-1,
+	makeMove(Board, AuxRow, AuxCol, 'empty', NewBoard).
 
+
+checkTopPiece(Board, NewBoard, 1, _):-
+	NewBoard = Board.
+
+checkTopPiece(Board, NewBoard, Row, Column):-
+	Row > 2,
+	AuxRow is Row - 1,
+	getSquarePiece(Column, AuxRow, Piece, Board),
+	NextAuxRow is Row - 2,
+	getSquarePiece(Column,NextAuxRow, NextPiece, Board),
+	(
+		((Piece \= 'empty', NextPiece == 'empty') -> (makeMove(Board, NextAuxRow, Column, Piece, TempBoard), makeMove(TempBoard, AuxRow, Column, 'empty', NewBoard))) ; NewBoard = Board
+	).
+
+checkTopPiece(Board, NewBoard, Row, Column):-
+	Row > 1,
+	AuxRow is Row-1,
+	makeMove(Board, AuxRow, Column, 'empty', NewBoard).
+
+
+checkTopRightPiece(Board, NewBoard, 6, _):-
+	NewBoard = Board.
+
+
+checkTopRightPiece(Board, NewBoard, _, 6):-
+	NewBoard = Board.
+
+checkTopRightPiece(Board, NewBoard, Row, Column):-
+	Column < 5,
+	Row > 2,
+	AuxCol is Column+1,
+	AuxRow is Row-1,
+	NextAuxRow is Row-2,
+	NextAuxCol is Column+2,
+	getSquarePiece(AuxCol, AuxRow, Piece, Board),
+	getSquarePiece(NextAuxCol,NextAuxRow, NextPiece, Board),
+	(
+		((Piece \= 'empty', NextPiece == 'empty') -> (makeMove(Board, NextAuxRow, NextAuxCol, Piece, TempBoard), makeMove(TempBoard, AuxRow, AuxCol, 'empty', NewBoard))) ; NewBoard = Board
+	).
+
+
+checkTopRightPiece(Board, NewBoard, Row, Column):-
+	Column < 6,
+	Row > 1,
+	AuxCol is Column + 1,
+	AuxRow is Row - 1,
+	makeMove(Board, AuxRow, AuxCol, 'empty', NewBoard).
+
+
+checkRightPiece(Board, NewBoard, 6, _):-
+	NewBoard = Board.
+
+checkRightPiece(Board, NewBoard, Row, Column):-
+	Column < 5,
+	AuxCol is Column + 1,
+	getSquarePiece(AuxCol, Row, Piece, Board),
+	NextAuxCol is Column + 2,
+	getSquarePiece(NextAuxCol,Row, NextPiece, Board),
+	(
+		((Piece \= 'empty', NextPiece == 'empty') -> (makeMove(Board, Row, NextAuxCol, Piece, TempBoard), makeMove(TempBoard, Row, AuxCol, 'empty', NewBoard))) ; NewBoard = Board
+	).
+
+checkRightPiece(Board, NewBoard, Row, Column):-
+	Column < 6,
+	AuxCol is Column + 1,
+	makeMove(Board, Row, AuxCol, 'empty', NewBoard).
+
+
+checkBottomRightPiece(Board, NewBoard, 6, _):-
+	NewBoard = Board.
+
+checkBottomRightPiece(Board, NewBoard, _, 6):-
+	NewBoard = Board.
+
+checkBottomRightPiece(Board, NewBoard, Row, Column):-
+	Column < 5,
+	Row < 5,
+	AuxCol is Column+1,
+	AuxRow is Row+1,
+	NextAuxRow is Row+2,
+	NextAuxCol is Column+2,
+	getSquarePiece(AuxCol, AuxRow, Piece, Board),
+	getSquarePiece(NextAuxCol,NextAuxRow, NextPiece, Board),
+	(
+		((Piece \= 'empty', NextPiece == 'empty') -> (makeMove(Board, NextAuxRow, NextAuxCol, Piece, TempBoard), makeMove(TempBoard, AuxRow, AuxCol, 'empty', NewBoard))) ; NewBoard = Board
+	).
+
+
+checkBottomRightPiece(Board, NewBoard, Row, Column):-
+	Column < 6,
+	Row < 6,
+	AuxCol is Column + 1,
+	AuxRow is Row + 1,
+	makeMove(Board, AuxRow, AuxCol, 'empty', NewBoard).
+
+
+checkBottomPiece(Board, NewBoard, 6, _):-
+	NewBoard = Board.
+
+
+checkBottomPiece(Board, NewBoard, Row, Column):-
+	Row < 5,
+	AuxRow is Row + 1,
+	getSquarePiece(Column, AuxRow, Piece, Board),
+	NextAuxRow is Row + 2,
+	getSquarePiece(Column,NextAuxRow, NextPiece, Board),
+	(
+		((Piece \= 'empty', NextPiece == 'empty') -> (makeMove(Board, NextAuxRow, Column, Piece, TempBoard), makeMove(TempBoard, AuxRow, Column, 'empty', NewBoard))) ; NewBoard = Board
+	).
+
+checkBottomPiece(Board, NewBoard, Row, Column):-
+	Row < 6,
+	AuxRow is Row + 1,
+	makeMove(Board, AuxRow, Column, 'empty', NewBoard).
+
+
+checkBottomLeftPiece(Board, NewBoard, 6, _):-
+	NewBoard = Board.
+
+checkBottomLeftPiece(Board, NewBoard, _, 1):-
+	NewBoard = Board.
+
+checkBottomLeftPiece(Board, NewBoard, Row, Column):-
+	Column > 2,
+	Row < 5,
+	AuxCol is Column-1,
+	AuxRow is Row+1,
+	NextAuxRow is Row+2,
+	NextAuxCol is Column-2,
+	getSquarePiece(AuxCol, AuxRow, Piece, Board),
+	getSquarePiece(NextAuxCol,NextAuxRow, NextPiece, Board),
+	(
+		((Piece \= 'empty', NextPiece == 'empty') -> (makeMove(Board, NextAuxRow, NextAuxCol, Piece, TempBoard), makeMove(TempBoard, AuxRow, AuxCol, 'empty', NewBoard))) ; NewBoard = Board
+	).
+
+checkBottomLeftPiece(Board, NewBoard, Row, Column):-
+	Column > 1,
+	Row < 6,
+	AuxCol is Column - 1,
+	AuxRow is Row + 1,
+	makeMove(Board, AuxRow, AuxCol, 'empty', NewBoard).
+
+checkLeftPiece(Board, NewBoard, _, 1):-
+	NewBoard = Board.
+
+checkLeftPiece(Board, NewBoard, Row, Column):-
+	Column > 2,
+	AuxCol is Column - 1,
+	getSquarePiece(AuxCol, Row, Piece, Board),
+	NextAuxCol is Column - 2,
+	getSquarePiece(NextAuxCol,Row, NextPiece, Board),
+	(
+		((Piece \= 'empty', NextPiece == 'empty') -> (makeMove(Board, Row, NextAuxCol, Piece, TempBoard), makeMove(TempBoard, Row, AuxCol, 'empty', NewBoard))) ; NewBoard = Board
+	).
+
+checkLeftPiece(Board, NewBoard, Row, Column):-
+	Column > 1,
+	AuxCol is Column - 1,
+	makeMove(Board, Row, AuxCol, 'empty', NewBoard).
 
 repulsion(Board, NewBoard, Row, Column):-
-	once(checkTopLeftPiece(Board, NewBoard, Row, Column)),
+	checkTopLeftPiece(Board, TempBoard1, Row, Column),
+	checkTopPiece(TempBoard1, TempBoard2, Row, Column),
+	checkTopRightPiece(TempBoard2, TempBoard3, Row, Column),
+	checkRightPiece(TempBoard3, TempBoard4, Row, Column),
+	checkBottomRightPiece(TempBoard4, TempBoard5, Row, Column),
+	checkBottomPiece(TempBoard5, TempBoard6, Row, Column),
+	checkBottomLeftPiece(TempBoard6, TempBoard7, Row, Column),
+	checkLeftPiece(TempBoard7, NewBoard, Row, Column),
 	!.
 
 
