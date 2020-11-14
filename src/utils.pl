@@ -1,8 +1,18 @@
 :-consult('display.pl').
 
-readMove(Row, Column, ValidRow, ValidCol):- %reads input from the user
-	readRow(Row, ValidRow),
-	readColumn(Column, ValidCol).
+readMove(Row, Column, ValidRow, ValidCol, State):- %reads input from the user
+	readRow(InputRow, Row),
+	readColumn(InputCol, Col),
+	(
+		getSquarePiece(Col, Row, empty, State) ->
+		(ValidRow is Row,
+		ValidCol is Col
+		);
+		(
+		write('Invalid position.\n'),
+		readMove(MoveRow,MoveCol,ValidRow,ValidCol, State)	
+		)
+	).
 
 %responsible for replacing a cell in InitialMatrix
 makeMove(InitialMatrix,R,C,Val,FinalMatrix):-
@@ -23,8 +33,20 @@ playColumn(NColumn,[P|RestColumn],Val,[P|NewColumn]):- %calls playColumn recursi
 	N is NColumn-1,
 	playColumn(N,RestColumn,Val,NewColumn).
 
-getSquarePiece(Column, Row, Content, GameState) :-
-    CalcRow is Row-1,
-    CalcColumn is Column-1,
-    nth0(CalcRow, GameState, SelRow),
-    nth0(CalcColumn, SelRow, Content).
+getSquarePiece(Column, Row, Content, GameState):-
+	Row > 0,
+	Column > 0,
+    nth1(Row, GameState, SelRow),
+    nth1(Column, SelRow, Content).
+
+
+%copied from SWI prolog
+flatten([], []) :- !. %transforms matrix into list
+flatten([L|Ls], FlatL) :-
+    !,
+    flatten(L, NewL),
+    flatten(Ls, NewLs),
+    append(NewL, NewLs, FlatL).
+flatten(L, [L]).
+
+
