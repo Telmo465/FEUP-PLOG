@@ -23,3 +23,8 @@ playColumn(NColumn,[P|RestColumn],Val,[P|NewColumn]):- %calls playColumn recursi
 	N is NColumn-1,
 	playColumn(N,RestColumn,Val,NewColumn).
 
+getSquarePiece(Column, Row, Content, GameState) :-
+    CalcRow is Row-1,
+    CalcColumn is Column-1,
+    nth0(CalcRow, GameState, SelRow),
+    nth0(CalcColumn, SelRow, Content).
