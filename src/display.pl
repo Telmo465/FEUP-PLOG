@@ -1,5 +1,3 @@
-:-consult('input.pl').
-
 initialBoard([
 [empty,empty,empty,empty,empty,empty],
 [empty,empty,empty,empty,empty,empty],
@@ -42,11 +40,11 @@ final:-
     printBoard(X).
 
 /*pieces symbols*/
-symbol(1,S) :- S='black'.
-symbol(2,S) :- S='red'.
+symbol(1,S) :- S='Black'.
+symbol(2,S) :- S='Red'.
 symbol(empty,S) :- S=' '.
-symbol('black',S) :- S='X'.
-symbol('red',S) :- S='O'.
+symbol('Black',S) :- S='X'.
+symbol('Red',S) :- S='O'.
 
 
 
@@ -85,16 +83,3 @@ printLine([Head|Tail]) :-
     write(S),
     write(' | '),
     printLine(Tail).
-
-
-
-
-
-
-
-
-
-
-
-
-

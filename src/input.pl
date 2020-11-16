@@ -1,13 +1,22 @@
-
 readRow(Row, NewRow):-
+	repeat,
 	write('Row: '),
-	read(Row),
+	once(read(Row)),
+	check(Row),
 	rowValid(Row, NewRow).
 	
 readColumn(Column, NewColumn):-
 	write('Column:'),
 	read(Column),
 	columnValid(Column, NewColumn).
+
+check(Row):-
+	Row >= 1,
+	Row =< 6.
+
+check(_Other):-
+	write('\nERROR: that option does not exist.\n\n'),
+	fail.
 	
 
 rowValid(1, NewRow):-
@@ -27,13 +36,6 @@ rowValid(5, NewRow):-
 
 rowValid(6, NewRow):-
 	NewRow = 6.
-
-rowValid(7, NewRow):-
-	NewRow = 7.
-
-rowValid(8, NewRow):-
-	NewRow = 8.
-
 
 columnValid('A', NewColumn):-
 	NewColumn = 1.
@@ -65,19 +67,3 @@ columnValid('F', NewColumn):-
 columnValid(f, NewColumn):-
 	NewColumn = 6.
 	
-columnValid('G', NewColumn):-
-	NewColumn = 7.
-columnValid(g, NewColumn):-
-	NewColumn = 7.
-	
-columnValid('H', NewColumn):-
-	NewColumn = 8.
-columnValid(h, NewColumn):-
-	NewColumn = 8.
-	
-
-
-
-
-
-
