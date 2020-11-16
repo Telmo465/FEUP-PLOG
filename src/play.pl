@@ -23,6 +23,7 @@ game_loop(Player1, Player2):- %implements the main loop of the game
 		assert(state(NextPlayer, NewBoard)),
 		once(display_game(NewBoard, NextPlayer)), % displays the current state of the board
 		checkWinner(NewBoard), % checks if the game has ended
+	retract(state(_,_)),
 	endGame.
 
 repeat.
