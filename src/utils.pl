@@ -61,7 +61,8 @@ verifyPieces(BoardList, Index, Piece, Counter):-
 
 %---------------------- Three in the row----------------------------%
 
-threeInRowLeftDiagonal(0,_,_,_,_).
+threeInRowLeftDiagonal(0,_,_,_,Piece):-
+	assert(winner(Piece)).
 
 threeInRowLeftDiagonal(Counter,Row,Col,Board,Piece):-
     Row < 7,
@@ -73,7 +74,8 @@ threeInRowLeftDiagonal(Counter,Row,Col,Board,Piece):-
     threeInRowLeftDiagonal(NewCounter,NewRow,NewCol,Board,Piece),
     !.
 
-threeInRowRightDiagonal(0,_,_,_,_).
+threeInRowRightDiagonal(0,_,_,_,Piece):-
+	assert(winner(Piece)).
 
 threeInRowRightDiagonal(Counter,Row,Col,Board,Piece):-
     Row < 7,
@@ -85,7 +87,8 @@ threeInRowRightDiagonal(Counter,Row,Col,Board,Piece):-
     threeInRowRightDiagonal(NewCounter,NewRow,NewCol,Board,Piece),
     !.
 
-threeInRowColumn(0,_,_,_,_).
+threeInRowColumn(0,_,_,_,Piece):-
+	assert(winner(Piece)).
 
 threeInRowColumn(Counter,Row,Col,Board,Piece):-
     Row < 7,
@@ -96,7 +99,8 @@ threeInRowColumn(Counter,Row,Col,Board,Piece):-
     threeInRowColumn(NewCounter,NewRow,Col,Board,Piece),
     !.
 
-threeInRowRow(0,_,_,_,_).
+threeInRowRow(0,_,_,_,Piece):-
+	assert(winner(Piece)).
 
 threeInRowRow(Counter,Row,Col,Board,Piece):-
     Row < 7,

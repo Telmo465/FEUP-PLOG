@@ -63,14 +63,11 @@ repulsion(Board, NewBoard, Row, Column):- % Repulsions
 	!.
 
 checkWinner(Board):-
-	retract(winner(Player)),
-    assert(winner(1)),
-    checkthree(Board,'Black');
-    assert(winner(2)),
+	checkthree(Board,'Black');
     checkthree(Board,'Red').
 
 endGame:-
-    winner(Player),
+	retract(winner(Player)),
     write('\n\n ________________________________________________________________________ \n'),
     nl,
     write('                                3 in a row!\n'),
