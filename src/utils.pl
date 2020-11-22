@@ -61,8 +61,7 @@ verifyPieces(BoardList, Index, Piece, Counter):-
 
 %---------------------- Three in the row----------------------------%
 
-threeInRowLeftDiagonal(0,_,_,_,Piece):-
-	assert(winner(Piece)).
+threeInRowLeftDiagonal(0,_,_,_,Piece).
 
 threeInRowLeftDiagonal(Counter,Row,Col,Board,Piece):-
     Row < 7,
@@ -74,8 +73,7 @@ threeInRowLeftDiagonal(Counter,Row,Col,Board,Piece):-
     threeInRowLeftDiagonal(NewCounter,NewRow,NewCol,Board,Piece),
     !.
 
-threeInRowRightDiagonal(0,_,_,_,Piece):-
-	assert(winner(Piece)).
+threeInRowRightDiagonal(0,_,_,_,Piece).
 
 threeInRowRightDiagonal(Counter,Row,Col,Board,Piece):-
     Row < 7,
@@ -87,8 +85,7 @@ threeInRowRightDiagonal(Counter,Row,Col,Board,Piece):-
     threeInRowRightDiagonal(NewCounter,NewRow,NewCol,Board,Piece),
     !.
 
-threeInRowColumn(0,_,_,_,Piece):-
-	assert(winner(Piece)).
+threeInRowColumn(0,_,_,_,Piece).
 
 threeInRowColumn(Counter,Row,Col,Board,Piece):-
     Row < 7,
@@ -99,8 +96,7 @@ threeInRowColumn(Counter,Row,Col,Board,Piece):-
     threeInRowColumn(NewCounter,NewRow,Col,Board,Piece),
     !.
 
-threeInRowRow(0,_,_,_,Piece):-
-	assert(winner(Piece)).
+threeInRowRow(0,_,_,_,Piece).
 
 threeInRowRow(Counter,Row,Col,Board,Piece):-
     Row < 7,
@@ -313,3 +309,211 @@ checkLeftPiece(Board, NewBoard, Row, Column):-
 	Column > 1,
 	AuxCol is Column - 1,
 	makeMove(Board, Row, AuxCol, 'empty', NewBoard).
+
+%---------------------------------inteligencia artificial--------------------
+
+choose([], []).
+choose(List, Elt) :-
+    length(List, Length),
+    random(0, Length, Index),
+    nth0(Index, List, Elt).
+
+getPosition(InRow, InCol, OutRow, OutCol):-
+	OutCol is InCol,
+	OutRow is InRow.
+
+getPosition(InRow, InCol, OutRow, OutCol):-
+	InCol < 7,
+	InRow < 7,
+	NewCol is InCol + 1,
+	getPosition(InRow, NewCol, OutRow, OutCol).
+
+getPosition(InRow, InCol, OutRow, OutCol):-
+	InCol >= 7,
+	InRow < 7,
+	NewCol is 1,
+	NewRow is InRow + 1,
+	getPosition(NewRow, NewCol, OutRow, OutCol).
+
+validPosition(Player, Row, Col, Board, NewBoard):-
+	getSquarePiece(Col, Row, empty, Board),
+	symbol(Player, S),
+	makeMove(Board, Row, Col, S, NewBoard1),
+	repulsion(NewBoard1, NewBoard, Row, Col),
+	!.
+
+move(Player, Board, NewBoard):-
+	getPosition(1,1,  OutRow, OutCol),
+	validPosition(Player, OutRow, OutCol, Board, NewBoard).
+
+
+is_empty(List):- List = []. %checks if list is empty
+
+isWinningMove(Board, Points, NewPoints, Player):-
+	symbol(Player, S),
+	checkthree(Board, S),
+	retract(winner(_)),
+	NewPoints is 1000.
+
+isWinningMove(Board, Points, NewPoints, Player):-
+	NewPoints = Points.
+
+%--------------------------------check 2 in a row-----------------------
+
+find2inrowRow(Board, Player,6, 5, Points, OutPoints):-
+	OutPoints = Points.
+
+
+find2inrowRow(Board, Player, Row, Col, Points, OutPoints):-
+	Row < 7,
+	Col < 6,
+	symbol(Player, S),
+	NewRow is Row+1,
+	NewCol is Col+1,
+	getSquarePiece(Col, Row, S1, Board),
+	getSquarePiece(NewCol, Row, S2, Board),
+	((S1 == S, S2 == S) -> (NewPoints is Points+40, find2inrowRow(Board, Player, Row, NewCol, NewPoints, OutPoints)) ; find2inrowRow(Board, Player, Row, NewCol, Points, OutPoints)).
+
+
+find2inrowRow(Board, Player, Row, Col, Points, OutPoints):- %	End of row
+	Row < 7,
+	Col >= 6,
+	NewRow is Row+1,
+	find2inrowRow(Board, Player, NewRow, 1, Points, OutPoints).
+
+
+
+find2inrowCol(Board, Player,5, 6, Points, OutPoints):-
+	OutPoints = Points.
+
+
+find2inrowCol(Board, Player, Row, Col, Points, OutPoints):-
+	Row < 6,
+	Col < 7,
+	symbol(Player, S),
+	NewRow is Row+1,
+	NewCol is Col+1,
+	getSquarePiece(Col, Row, S1, Board),
+	getSquarePiece(Col, NewRow, S2, Board),
+	((S1 == S, S2 == S) -> (NewPoints is Points+40, find2inrowCol(Board, Player, Row, NewCol, NewPoints, OutPoints)) ; find2inrowCol(Board, Player, Row, NewCol, Points, OutPoints)).
+
+
+find2inrowCol(Board, Player, Row, Col, Points, OutPoints):-
+	Row < 6,
+	Col >= 7,
+	NewRow is Row+1,
+	find2inrowCol(Board, Player, NewRow, 1, Points, OutPoints).
+
+
+find2inrowRightDiagonal(Board, Player, 5, 6, Points, OutPoints):-
+	OutPoints = Points.
+
+
+find2inrowRightDiagonal(Board, Player, Row, Col, Points, OutPoints):-
+	Row < 6,
+	Col < 6,
+	NewRow is Row + 1,
+	NewCol is Col + 1,
+	symbol(Player, S),
+	getSquarePiece(Col, Row, S1 ,Board),
+	getSquarePiece(NewCol, NewRow, S2, Board),
+	((S1 == S, S2 == S) -> (NewPoints is Points+40, find2inrowRightDiagonal(Board, Player, Row, NewCol, NewPoints, OutPoints)) ; find2inrowRightDiagonal(Board, Player, Row, NewCol, Points, OutPoints)).
+
+
+
+find2inrowRightDiagonal(Board, Player, Row, Col, Points, OutPoints):-
+	Col >= 6,
+	Row < 6,
+	NewRow is Row + 1,
+	find2inrowRightDiagonal(Board, Player, NewRow, 1, Points, OutPoints).
+
+
+find2inrowLeftDiagonal(Board, Player, 2, 6, Points, OutPoints):-
+	OutPoints = Points.
+
+
+find2inrowLeftDiagonal(Board, Player, Row, Col, Points, OutPoints):-
+	Col < 6,
+	Row > 1,
+	NewRow is Row - 1,
+	NewCol is Col + 1,
+	symbol(Player, S),
+	getSquarePiece(Col, Row, S1 ,Board),
+	getSquarePiece(NewCol, NewRow, S2, Board),
+	((S1 == S, S2 == S) -> (NewPoints is Points+40, find2inrowLeftDiagonal(Board, Player, Row, NewCol, NewPoints, OutPoints)) ; find2inrowLeftDiagonal(Board, Player, Row, NewCol, Points, OutPoints)).
+
+
+find2inrowLeftDiagonal(Board, Player, Row, Col, Points, OutPoints):-
+	Col >= 6,
+	Row > 1,
+	NewRow is Row-1,
+	find2inrowLeftDiagonal(Board, Player, NewRow, 1, Points, OutPoints).
+
+
+%------------point system----------------------------------
+findNumPieces([], Points, _, OutPoints):-
+	OutPoints = Points.
+
+findNumPieces([H|FlattenBoard], Points, Symbol, OutPoints):-
+	(
+		(H = Symbol -> (NewPoints is Points+2, findNumPieces(FlattenBoard, NewPoints, Symbol, OutPoints))) ;  findNumPieces(FlattenBoard, Points, Symbol, OutPoints)
+	).
+
+
+evaluateBoards([], _, _, _, BoardSel, OutBoards):-
+	OutBoards = BoardSel.
+
+
+evaluateBoards([H|ListBoards], Player, NextPlayer, Max, BoardsSel, OutBoards):-
+	%check for winning moves
+	AuxBoard = H,
+	symbol(Player, SymbolPlayer),
+	symbol(NextPlayer, SymbolOpponent),
+
+	find2inrowCol(H, Player, 1,1,0, PointsPlayer),
+	find2inrowCol(H, NextPlayer, 1,1,0, PointsOpponent),
+	find2inrowRow(H, Player, 1,1, PointsPlayer, TempPointsPlayer),
+	find2inrowRow(H, NextPlayer, 1,1, PointsOpponent, TempPointsOpponent),
+
+	find2inrowRightDiagonal(H, Player, 1,1, TempPointsPlayer ,TempPointsPlayer2),
+	find2inrowRightDiagonal(H, NextPlayer, 1,1, TempPointsOpponent, TempPointsOpponent2),
+
+	find2inrowLeftDiagonal(H, Player, 6, 1, TempPointsPlayer2, NewPointsPlayer),
+	find2inrowLeftDiagonal(H, NextPlayer, 6, 1, TempPointsOpponent2, NewPointsOpponent),
+
+	flatten(H, FlattenBoard1),
+	FlattenBoard2 = FlattenBoard1,
+	findNumPieces(FlattenBoard1, NewPointsPlayer, SymbolPlayer, PointsPlayer1),
+	findNumPieces(FlattenBoard2, NewPointsOpponent, SymbolOpponent, PointsOpponent1),
+
+	isWinningMove(AuxBoard, PointsPlayer1, PointsPlayer2, Player),
+	isWinningMove(AuxBoard, PointsOpponent1, PointsOpponent2, NextPlayer),
+
+
+	Balance is PointsPlayer2 - 3*PointsOpponent2,
+	
+	listBestMoves(Max, Balance, H, BoardsSel, NewListMoves, NewMax),
+	evaluateBoards(ListBoards, Player, NextPlayer, NewMax, NewListMoves, OutBoards).
+
+
+listBestMoves(CurrentMax, Balance, Board ,ListMoves, NewListMoves, NewMax):-
+	Balance > CurrentMax,
+	NewMax is Balance,
+	NewListMoves = [Board]. %resets previous board
+
+listBestMoves(CurrentMax, Balance, Board , ListMoves, NewListMoves, NewMax):-
+	Balance =:= CurrentMax,
+	NewMax = Balance,	
+	append([Board], ListMoves, NewListMoves).
+
+
+listBestMoves(CurrentMax, Balance, Board ,ListMoves, NewListMoves, NewMax):- %	predicate never fails
+	NewMax = CurrentMax,
+	NewListMoves = ListMoves.
+	
+	
+findBestMove(NewBoard, ListBoards, Player, NextPlayer):- 		%evaluates all moves in ListBoards matrix
+	AllBoards = ListBoards,
+	evaluateBoards(ListBoards, Player, NextPlayer, -2000, CurrentBoard, OutBoardSel),
+	choose(OutBoardSel, NewBoard),
+	!.

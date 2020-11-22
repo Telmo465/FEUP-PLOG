@@ -27,6 +27,29 @@ print_Menu:-
     write('|                                                                        |\n'),
     write('|________________________________________________________________________|\n').
 
+print_Menu2:-
+    write('\n\n ________________________________________________________________________ \n'),
+    write('|                                                                        |\n'),
+    write('|                                                                        |\n'),
+    write('|          >===>              >=>            >=>                         |\n'),
+    write('|        >>    >=>            >=>       >>   >=>                >>       |\n'),
+    write('|       >=>           >==>    >=>  >=>     >=>>==>    >=> >=>            |\n'),
+    write('|       >=>         >>   >=>  >=> >=>  >=>   >=>    >=>   >=>  >=>       |\n'),
+    write('|       >=>   >===> >>===>>=> >=>=>    >=>   >=>   >=>    >=>  >=>       |\n'),
+    write('|        >=>    >>  >>        >=> >=>  >=>   >=>    >=>   >=>  >=>       |\n'),
+    write('|         >====>     >====>   >=>  >=> >=>    >=>    >==>>>==> >=>       |\n'),
+    write('|                                                                        |\n'),
+    write('|                                                                        |\n'),
+    write('|             ---------------------------------------------              |\n'),
+    write('|                                                                        |\n'),
+    write('|                         1. Level Easy                                  |\n'),
+    write('|                                                                        |\n'),
+    write('|                         2. Level Hard                                  |\n'),
+    write('|                                                                        |\n'),
+    write('|                         0. Exit                                        |\n'),
+    write('|                                                                        |\n'),
+    write('|________________________________________________________________________|\n').
+
 selectoption:-
     repeat,
     write('Select mode:\n'),
@@ -54,5 +77,31 @@ manageInput(3):-
     main_menu.
 
 manageInput(2):-
+    print_Menu2,
+    selectoption2.
+
+selectoption2:-
+    repeat,
+    write('Select mode:\n'),
+    once(read(Option)),
+    checkMenuOption2(Option),
+    manageInput2(Option).
+
+checkMenuOption2(Option):-
+    Option >= 0,
+    Option =< 2.
+
+checkMenuOption2(_):-
+    write('\nERROR: that option does not exist.\n\n'),
+    fail.
+
+manageInput2(0):-
+    write('\nExiting...\n\n').
+
+manageInput2(1):-
+    game_loop('Player', 'BOT2'),
+    main_menu.
+
+manageInput2(2):-
     game_loop('Player', 'BOT1'),
     main_menu.
