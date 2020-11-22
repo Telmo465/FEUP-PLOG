@@ -35,7 +35,7 @@ getSquarePiece(Column, Row, Content, GameState):- %get the content of a cell of 
 	Row > 0,
 	Column > 0,
     nth1(Row, GameState, SelRow),
-    nth1(Column, SelRow, Content).
+	nth1(Column, SelRow, Content).
 
 
 %copied from SWI prolog

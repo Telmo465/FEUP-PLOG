@@ -48,3 +48,11 @@ manageInput(0):-
 manageInput(1):-
     game_loop('Player', 'Player'),
     main_menu.
+
+manageInput(3):-
+    game_loop('BOT1', 'BOT1'),
+    main_menu.
+
+manageInput(2):-
+    game_loop('Player', 'BOT1'),
+    main_menu.
