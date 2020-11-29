@@ -195,7 +195,7 @@ game_over(GameState, 'Black'):-
 game_over(GameState, 'Red'):-
 	checkWin(GameState,'Red').
 
-game_over(GameState,none).
+game_over(_,none).
 
 
 endGame:-
