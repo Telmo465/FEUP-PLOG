@@ -21,7 +21,8 @@ game_loop('BOT1', 'BOT1'):- %implements the main loop of the game
 		generatePCmove(Player, NextPlayer ,Board, NewBoard), %replaces an empty cell with the respective player piece
 		assert(state(NextPlayer, NewBoard)),
 		once(display_game(NewBoard, NextPlayer)), % displays the current state of the board
-		game_over(NewBoard, _),% checks if the game has ended
+		game_over(NewBoard, Winner),% checks if the game has ended
+		Winner \= none,
 	retract(state(_,_)),
 	endGame.
 
@@ -52,7 +53,8 @@ game_loop('Player', 'BOT1'):- %implements the main loop of the game
 		%generatePCmove(Player, NextPlayer ,Board, NewBoard), %replaces an empty cell with the respective player piece
 		assert(state(NextPlayer, NewBoard)),
 		once(display_game(NewBoard, NextPlayer)), % displays the current state of the board
-		game_over(NewBoard, _),% checks if the game has ended
+		game_over(NewBoard, Winner),% checks if the game has ended
+		Winner \= none,
 	retract(state(_,_)),
 	endGame.
 
@@ -68,7 +70,8 @@ game_loop('Player', 'BOT2'):- %implements the main loop of the game
 		),
 		assert(state(NextPlayer, NewBoard)),
 		once(display_game(NewBoard, NextPlayer)), % displays the current state of the board
-		game_over(NewBoard, _), % checks if the game has ended
+		game_over(NewBoard, Winner),% checks if the game has ended
+		Winner \= none,
 	retract(state(_,_)),
 	endGame.
 
@@ -84,7 +87,8 @@ game_loop(Player1, Player2):- %implements the main loop of the game
 		once(playMove(Player, NextPlayer ,Board, NewBoard)), %replaces an empty cell with the respective player piece
 		assert(state(NextPlayer, NewBoard)),
 		once(display_game(NewBoard, NextPlayer)), % displays the current state of the board
-		game_over(NewBoard, _), % checks if the game has ended
+		game_over(NewBoard, Winner),% checks if the game has ended
+		Winner \= none,
 	retract(state(_,_)),
 	endGame.
 
@@ -147,10 +151,15 @@ playMove(Player, NextPlayer, State, NewState):- 	%reads input and makes the resp
 	move(State, [ValidCol, ValidRow, Player], NewState),
 	updatePlayer(Player, NextPlayer).
 
-checkthree(Board,Piece):- % Three in a row
+checkWin(Board,Piece):- % Three in a row
+	checkAllRowsCols(7,7,Board,Piece),
+	assert(winner(Piece)).
+
+checkWin(Board,Piece):-
 	flatten(Board, BoardList),
-	verifyPieces(BoardList, 1, Piece, 8);
-    (checkAllRowsCols(7,7,Board,Piece),assert(winner(Piece))).
+	verifyPieces(BoardList, 1, Piece, 8),
+	assert(winner(Piece)).
+
 
 repulsion(Board, NewBoard, Row, Column):- % Repulsions
 	checkTopLeftPiece(Board, TempBoard1, Row, Column),
@@ -164,10 +173,13 @@ repulsion(Board, NewBoard, Row, Column):- % Repulsions
 	!.
 
 game_over(GameState, 'Black'):-
-	checkthree(GameState,'Black').
+	checkWin(GameState,'Black').
 
 game_over(GameState, 'Red'):-
-	checkthree(GameState,'Red').
+	checkWin(GameState,'Red').
+
+game_over(GameState,none).
+
 
 
 endGame:-
