@@ -52,7 +52,7 @@
  * The processing of the game loop is done in the following way:
 	- Initially, we call the predicate initial(GameState), to initialize an empty board, and assert that the player with the black pieces goes first;
 	- Inside the loop section, we retrieve information containing the current player and board;
-	- Call the "playMove" predicate, responsible for replacing empty cells for "X" or "0" cells, depending on the player;
+	- Call the "playMove" predicate, responsible for reading user input and calling upon ``move(GameState, Move, NewGameState)`` to replace the empty cells for "X" or "0" cells, depending on the player;
 	- Receive information about the next player from "playMove";
 	- Finally, every iteration of the loop displays the current state of the board.
 * The loop repeats itself until one of the players win (this verification is not yet implemented in the source code).
@@ -157,7 +157,7 @@
 * Final State:
 		 ![Final State](img/final_state.png)
 
-## Valid moves list - [play.pl]([play.pl](./src/play.pl)) & [utils.pl]([utils.pl](./src/utils.pl))
+## Valid moves list - [play.pl](./src/play.pl) & [utils.pl](./src/utils.pl)
 In order to obtain all the possible moves that the player can make, we implemented the predicate valid_moves(+GameState, +Player, -ListOfMoves):
 ``
 valid_moves(GameState, Player, ListOfMoves):-
@@ -166,31 +166,33 @@ findall(UpdatedBoard, gen_move(Player ,GameState, UpdatedBoard), ListOfMoves).
  In the valid_moves predicate, we call the findall predicate, tha lists all the possible moves, using the helper predicate ``gen_move``. This predicate iterates the board, placing the player's piece in any empty square.
  This way, by calling the ``gen_move`` predicate inside the findall, ListOfMoves returns all the valid moves that can be made in the current game state.
 
-## Move execution - [input.pl]([input.pl](./src/input.pl)) & [play.pl]([play.pl](./src/play.pl))
+## Move execution - [input.pl](./src/input.pl) & [play.pl](./src/play.pl)
 The validation and execution of the moves made by a human player is done using the predicate ``move(GameState, Move, NewGameState)``.
 This predicate receives in Move, a list containing the row, column and the player to move, received in the predicate ``playMove(Player, NextPlayer, State, NewState)``, that reads the user input containing the information about the row and column where the player wants to place his piece.
-After placing the piece in the board, all there is left to do is to process consequent repulsions.
+After placing the piece on the board, all there is left to do is to process consequent repulsions (by calling ``repulsions`` predicate).
 
-## Game Over - [play.pl]([play.pl](./src/play.pl)) & [utils.pl]([utils.pl](./src/utils.pl))
+## Game Over - [play.pl](./src/play.pl) & [utils.pl](./src/utils.pl)
 The game_loop predicate needs an end condition. In this case, when a player wins the game, the game loop ends and a message is printed to the console containing the information about the winner. 
 To process the game over verification, we implemented the ``game_over(GameState, Winner)``, that calls upon 
 the ``checkWin(Board,Piece)`` that looks for 3 in a row appearances or 8 pieces on the board for each player.
+In case one of these conditions is met, Winner assumes the value of the respective player, 'Red' or 'Black' and the game_loop stops. If no winner is found, Winner is unified with the atom 'none' ant the game_loop continues. 
 * The 3 in a row verification is done by calling the ``checkAllRowsCols(7,7,Board,Piece)``, that iterates the whole board, looking for three pieces in a row;
-* To verify the number of pieces from each player, we call ``verifyPieces(BoardList, 1, Piece, 8)``, that recieves a flatten board and returns success in case the player has 8 pieces on the board.
+* To verify the number of pieces from each player, we call ``verifyPieces(BoardList, 1, Piece, 8)``, that recieves a flatten board and returns success in case the player has 8 pieces on the board. 
+ 
 
 
-## Board Evaluation - utils.pl]([utils.pl](./src/utils.pl))
+## Board Evaluation - [utils.pl](./src/utils.pl)
 Since Gekitai does not have a points system, we implemented one of our own, that is used for finding the best PC move, given a list of possible moves. The points system implemented has in consideration the following situations:
 * The player has 2 pieces in a row in any direction: in this case, for each occurrence, we increment 40 points to the respective player. This verification is done by calling the helper predicates ``find2inrowCol``, ``find2inrowRow``, ``find2inrowRightDiagonal`` and ``find2inrowLeftDiagonal``;
 * The number of pieces from a player is changed after a move is made. Each piece is worth 2 points and the number of pieces is counted by the predicate ``findNumPieces(FlattenBoard1, NewPointsPlayer, SymbolPlayer, PointsPlayer1)``;
 * Last and most importantly, if a move wins the game, it is given 1000 points, since it's obviously the best move in any situation.
 
-## Computer Move - [input.pl]([input.pl](./src/input.pl)) & [play.pl]([play.pl](./src/play.pl))
+## Computer Move - [input.pl](./src/input.pl) & [play.pl](./src/play.pl)
 As specified, we implemented 2 levels of difficulty in the game: 'easy' and 'hard'.
-In order to handle the computer moves, the predicate ``choose_move(GameState, Player, Level, Move)``.
+The predicate ``choose_move(GameState, Player, Level, Move)`` handles all computer moves.
 The third argument received by this predicate dictates its behaviour. This way, ``choose_move(GameState, Player, easy, Move)`` returns in Move the game state containing the move made by the computer in easy mode, for example.
 * The easy mode is pretty straight forward: the computer generates all possible moves, using the ``valid_moves`` predicate and chooses a random element from that list (ListOfMoves), using ``choose(List, Elt)``;
-* The hard mode is a bit more sofisticated: the computer evaluates all the possible boards (ListOfMoves), using the points system previously described. The evaluation of the boards is done by the predicate ``evaluateBoards(ListBoards, Player, NextPlayer, Max, BoardsSel, OutBoards)``, responsible for returning in OutBoards, a list containing the game states with the most amount of points. This predicate is called by ``findBestMove(NewBoard, ListBoards, Player, NextPlayer)``. After reveiving the list with the best moves, all we need to do is choose (randomly) a list from that list.
+* The hard mode is a bit more sofisticated: the computer evaluates all the possible boards (ListOfMoves), using the points system previously described. The evaluation of the boards is done by the predicate ``evaluateBoards(ListBoards, Player, NextPlayer, Max, BoardsSel, OutBoards)``, responsible for returning in OutBoards, a list containing the game states with the most amount of points. This predicate is called by ``findBestMove(NewBoard, ListBoards, Player, NextPlayer)``. After reveiving the list with the best moves, all we need to do is choose (randomly) a game state from that list.
 
 ## Conclusions
 
