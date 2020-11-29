@@ -343,7 +343,7 @@ validPosition(Player, Row, Col, Board, NewBoard):-
 	!.
 
 gen_move(Player, Board, NewBoard):-
-	getPosition(1,1,  OutRow, OutCol),
+	getPosition(1,1, OutRow, OutCol),
 	validPosition(Player, OutRow, OutCol, Board, NewBoard).
 
 
@@ -351,7 +351,7 @@ is_empty(List):- List = []. %checks if list is empty
 
 isWinningMove(Board, _, NewPoints, Player):-
 	symbol(Player, S),
-	checkthree(Board, S),
+	checkWin(Board, S),
 	retract(winner(_)),
 	NewPoints is 1000.
 
