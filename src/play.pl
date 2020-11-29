@@ -61,6 +61,23 @@ game_loop('Player', 'BOT2'):- %implements the main loop of the game
 	retract(state(_,_)),
 	endGame.
 
+%game loop --> PC x PC
+game_loop('BOT2', 'BOT2'):- %implements the main loop of the game
+    initial(GameState),
+    assert(state(1, GameState)),
+    repeat,
+        retract(state(Player, Board)),
+        choose_move(Board ,Player, easy, NewBoard), 
+        updatePlayer(Player, NextPlayer),
+        assert(state(NextPlayer, NewBoard)),
+        once(display_game(NewBoard, NextPlayer)), % displays the current state of the board
+        game_over(NewBoard, Winner),% checks if the game has ended
+		Winner \= none,
+    retract(state(_,_)),
+    endGame.
+
+
+
 %game loop --> Human x Human
 game_loop(Player1, Player2):- %implements the main loop of the game
 	initial(GameState),
@@ -167,13 +184,10 @@ game_over(GameState, 'Red'):-
 game_over(GameState,none).
 
 
-
 endGame:-
-	retract(winner(Player)),
+    retract(winner(Player)),
     write('\n\n ________________________________________________________________________ \n'),
-    nl,
-	write('                                3 in a row!\n'),
-	symbol(Player,S),
+    symbol(Player,S),
     nl,
     write('                            '),                                   
     write(S),
