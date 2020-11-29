@@ -21,7 +21,7 @@ game_loop('BOT1', 'BOT1'):- %implements the main loop of the game
 		generatePCmove(Player, NextPlayer ,Board, NewBoard), %replaces an empty cell with the respective player piece
 		assert(state(NextPlayer, NewBoard)),
 		once(display_game(NewBoard, NextPlayer)), % displays the current state of the board
-		checkWinner(NewBoard), % checks if the game has ended
+		game_over(NewBoard, _),% checks if the game has ended
 	retract(state(_,_)),
 	endGame.
 
@@ -33,12 +33,12 @@ game_loop('Player', 'BOT1'):- %implements the main loop of the game
 	repeat,
 		retract(state(Player, Board)),
 		(
-			((Player =:= 1) -> once(playMove(Player, NextPlayer ,Board, NewBoard))) ; generatePCmove(Player, NextPlayer ,Board, NewBoard)
+			((Player =:= 1) -> once(playMove(Player, NextPlayer ,Board, NewBoard))) ; (choose_move(Board ,Player, hard, NewBoard), updatePlayer(Player, NextPlayer))
 		),
 		%generatePCmove(Player, NextPlayer ,Board, NewBoard), %replaces an empty cell with the respective player piece
 		assert(state(NextPlayer, NewBoard)),
 		once(display_game(NewBoard, NextPlayer)), % displays the current state of the board
-		checkWinner(NewBoard), % checks if the game has ended
+		game_over(NewBoard, _),% checks if the game has ended
 	retract(state(_,_)),
 	endGame.
 
@@ -50,11 +50,11 @@ game_loop('Player', 'BOT2'):- %implements the main loop of the game
 	repeat,
 		retract(state(Player, Board)),
 		(
-			((Player =:= 1) -> once(playMove(Player, NextPlayer ,Board, NewBoard))) ; generatePCmoveeasy(Player, NextPlayer ,Board, NewBoard)
+			((Player =:= 1) -> once(playMove(Player, NextPlayer ,Board, NewBoard))) ; (choose_move(Board ,Player, easy, NewBoard), updatePlayer(Player, NextPlayer))
 		),
 		assert(state(NextPlayer, NewBoard)),
 		once(display_game(NewBoard, NextPlayer)), % displays the current state of the board
-		checkWinner(NewBoard), % checks if the game has ended
+		game_over(NewBoard, _), % checks if the game has ended
 	retract(state(_,_)),
 	endGame.
 
@@ -70,7 +70,7 @@ game_loop(Player1, Player2):- %implements the main loop of the game
 		once(playMove(Player, NextPlayer ,Board, NewBoard)), %replaces an empty cell with the respective player piece
 		assert(state(NextPlayer, NewBoard)),
 		once(display_game(NewBoard, NextPlayer)), % displays the current state of the board
-		checkWinner(NewBoard), % checks if the game has ended
+		game_over(NewBoard, _), % checks if the game has ended
 	retract(state(_,_)),
 	endGame.
 
@@ -79,8 +79,23 @@ repeat:-
 	repeat.	
 
 
+valid_moves(GameState, Player, ListOfMoves):-
+	findall(UpdatedBoard, gen_move(Player ,GameState, UpdatedBoard), ListOfMoves).
+
+
+updatePlayer(Player, NextPlayer):-
+	(
+		(Player =:= 1,
+		NextPlayer is 2
+		);
+
+		(Player =:= 2,
+			NextPlayer is 1
+		)
+	).
+
 generatePCmove(Player ,NextPlayer, Board, NewBoard):- 
-	findall(UpdatedBoard, move(Player ,Board, UpdatedBoard), ListBoards),
+	valid_moves(Board, Player, ListBoards),
 	(
 		(Player =:= 1,
 		NextPlayer is 2
@@ -94,36 +109,29 @@ generatePCmove(Player ,NextPlayer, Board, NewBoard):-
 	findBestMove(NewBoard, ListBoards, Player, NextPlayer),
 	!.
 
-generatePCmoveeasy(Player ,NextPlayer, Board, NewBoard):- 
-	findall(UpdatedBoard, move(Player ,Board, UpdatedBoard), ListBoards),
-	(
-		(Player =:= 1,
-		NextPlayer is 2
-		);
 
-		(Player =:= 2,
-			NextPlayer is 1
-		)
-	),	
+choose_move(GameState, Player, easy, Move):-
+	valid_moves(GameState, Player, ListBoards),
+	choose(ListBoards, Move).
 
-	choose(ListBoards, NewBoard).
-	
+choose_move(GameState, Player, hard, Move):-
+	valid_moves(GameState, Player, ListBoards),
+	updatePlayer(Player, NextPlayer),
+	findBestMove(Move, ListBoards, Player, NextPlayer),!.
+
+
+move(GameState, Move, NewGameState):-
+	nth0(0, Move, Col),
+	nth0(1, Move, Row),
+	nth0(2, Move, Player),
+	symbol(Player, S),
+	makeMove(GameState, Row, Col, S, TempState),
+	repulsion(TempState, NewGameState, Row, Col).
 
 playMove(Player, NextPlayer, State, NewState):- 	%reads input and makes the respective move on the board
-	readMove(Row, Col, ValidRow, ValidCol, State), 
-	symbol(Player, S),
-	makeMove(State, ValidRow, ValidCol, S, TempState),
-	once(repulsion(TempState, NewState, ValidRow, ValidCol)),
-
-	(
-		(Player =:= 1,
-		NextPlayer is 2
-		);
-
-		(Player =:= 2,
-			NextPlayer is 1
-		)
-	).
+	readMove(_, _, ValidRow, ValidCol, State), 
+	move(State, [ValidCol, ValidRow, Player], NewState),
+	updatePlayer(Player, NextPlayer).
 
 checkthree(Board,Piece):- % Three in a row
 	flatten(Board, BoardList),
@@ -141,9 +149,12 @@ repulsion(Board, NewBoard, Row, Column):- % Repulsions
 	checkLeftPiece(TempBoard7, NewBoard, Row, Column),
 	!.
 
-checkWinner(Board):-
-	checkthree(Board,'Black');
-    checkthree(Board,'Red').
+game_over(GameState, 'Black'):-
+	checkthree(GameState,'Black').
+
+game_over(GameState, 'Red'):-
+	checkthree(GameState,'Red').
+
 
 endGame:-
 	retract(winner(Player)),

@@ -1,6 +1,6 @@
-readMove(Row, Column, ValidRow, ValidCol, State):- %reads input from the user
-	readRow(InputRow, Row),
-	readColumn(InputCol, Col),
+readMove(Row, _, ValidRow, ValidCol, State):- %reads input from the user
+	readRow(_, Row),
+	readColumn(_, Col),
 	(
 		getSquarePiece(Col, Row, empty, State) ->
 		(ValidRow is Row,
@@ -8,7 +8,7 @@ readMove(Row, Column, ValidRow, ValidCol, State):- %reads input from the user
 		);
 		(
 		write('Invalid position.\n'),
-		readMove(MoveRow,MoveCol,ValidRow,ValidCol, State)	
+		readMove(_,_,ValidRow,ValidCol, State)	
 		)
 	).
 
@@ -61,7 +61,7 @@ verifyPieces(BoardList, Index, Piece, Counter):-
 
 %---------------------- Three in the row----------------------------%
 
-threeInRowLeftDiagonal(0,_,_,_,Piece).
+threeInRowLeftDiagonal(0,_,_,_,_).
 
 threeInRowLeftDiagonal(Counter,Row,Col,Board,Piece):-
     Row < 7,
@@ -73,7 +73,7 @@ threeInRowLeftDiagonal(Counter,Row,Col,Board,Piece):-
     threeInRowLeftDiagonal(NewCounter,NewRow,NewCol,Board,Piece),
     !.
 
-threeInRowRightDiagonal(0,_,_,_,Piece).
+threeInRowRightDiagonal(0,_,_,_,_).
 
 threeInRowRightDiagonal(Counter,Row,Col,Board,Piece):-
     Row < 7,
@@ -85,7 +85,7 @@ threeInRowRightDiagonal(Counter,Row,Col,Board,Piece):-
     threeInRowRightDiagonal(NewCounter,NewRow,NewCol,Board,Piece),
     !.
 
-threeInRowColumn(0,_,_,_,Piece).
+threeInRowColumn(0,_,_,_,_).
 
 threeInRowColumn(Counter,Row,Col,Board,Piece):-
     Row < 7,
@@ -96,7 +96,7 @@ threeInRowColumn(Counter,Row,Col,Board,Piece):-
     threeInRowColumn(NewCounter,NewRow,Col,Board,Piece),
     !.
 
-threeInRowRow(0,_,_,_,Piece).
+threeInRowRow(0,_,_,_,_).
 
 threeInRowRow(Counter,Row,Col,Board,Piece):-
     Row < 7,
@@ -129,10 +129,12 @@ checkAllRowsCols(Row,Col,Board,Piece):-
 
 %--------------------------Repulsions-------------------------------%
 
-checkTopLeftPiece(Board,Board,1,_).
+checkTopLeftPiece(Board,NewBoard,1,_):-
+	NewBoard = Board.
 
 
-checkTopLeftPiece(Board,Board,_,1).
+checkTopLeftPiece(Board,NewBoard,_,1):-
+	NewBoard = Board.
 
 
 checkTopLeftPiece(Board, NewBoard, Row, Column):-
@@ -156,7 +158,8 @@ checkTopLeftPiece(Board, NewBoard, Row, Column):-
 	makeMove(Board, AuxRow, AuxCol, 'empty', NewBoard).
 
 
-checkTopPiece(Board, Board, 1, _).
+checkTopPiece(Board, NewBoard, 1, _):-
+	NewBoard = Board.
 
 checkTopPiece(Board, NewBoard, Row, Column):-
 	Row > 2,
@@ -174,10 +177,12 @@ checkTopPiece(Board, NewBoard, Row, Column):-
 	makeMove(Board, AuxRow, Column, 'empty', NewBoard).
 
 
-checkTopRightPiece(Board, Board, 1, _).
+checkTopRightPiece(Board, NewBoard, 1, _):-
+	NewBoard = Board.
 
 
-checkTopRightPiece(Board, Board, _, 6).
+checkTopRightPiece(Board, NewBoard, _, 6):-
+	NewBoard = Board.
 
 checkTopRightPiece(Board, NewBoard, Row, Column):-
 	Column < 5,
@@ -199,7 +204,8 @@ checkTopRightPiece(Board, NewBoard, Row, Column):-
 	AuxRow is Row - 1,
 	makeMove(Board, AuxRow, AuxCol, 'empty', NewBoard).
 
-checkRightPiece(Board, Board, _, 6).
+checkRightPiece(Board, NewBoard, _, 6):-
+	NewBoard = Board.
 
 checkRightPiece(Board, NewBoard, Row, Column):-
 	Column < 5,
@@ -216,9 +222,11 @@ checkRightPiece(Board, NewBoard, Row, Column):-
 	AuxCol is Column + 1,
 	makeMove(Board, Row, AuxCol, 'empty', NewBoard).
 
-checkBottomRightPiece(Board, Board, 6, _).
+checkBottomRightPiece(Board, NewBoard, 6, _):-
+	NewBoard = Board.
 
-checkBottomRightPiece(Board, Board, _, 6).
+checkBottomRightPiece(Board, NewBoard, _, 6):-
+	NewBoard = Board.
 
 checkBottomRightPiece(Board, NewBoard, Row, Column):-
 	Column < 5,
@@ -240,7 +248,8 @@ checkBottomRightPiece(Board, NewBoard, Row, Column):-
 	AuxRow is Row + 1,
 	makeMove(Board, AuxRow, AuxCol, 'empty', NewBoard).
 
-checkBottomPiece(Board, Board, 6, _).
+checkBottomPiece(Board, NewBoard, 6, _):-
+	NewBoard = Board.
 
 checkBottomPiece(Board, NewBoard, Row, Column):-
 	Row < 5,
@@ -260,7 +269,8 @@ checkBottomPiece(Board, NewBoard, Row, Column):-
 checkBottomLeftPiece(Board, NewBoard, 6, _):-
 	NewBoard = Board.
 
-checkBottomLeftPiece(Board, Board, _, 1).
+checkBottomLeftPiece(Board, NewBoard, _, 1):-
+	NewBoard = Board.
 
 checkBottomLeftPiece(Board, NewBoard, Row, Column):-
 	Column > 2,
@@ -282,7 +292,8 @@ checkBottomLeftPiece(Board, NewBoard, Row, Column):-
 	AuxRow is Row + 1,
 	makeMove(Board, AuxRow, AuxCol, 'empty', NewBoard).
 
-checkLeftPiece(Board, Board, _, 1).
+checkLeftPiece(Board, NewBoard, _, 1):-
+	NewBoard = Board.
 
 checkLeftPiece(Board, NewBoard, Row, Column):-
 	Column > 2,
@@ -307,7 +318,9 @@ choose(List, Elt) :-
     random(0, Length, Index),
     nth0(Index, List, Elt).
 
-getPosition(InRow, InCol, InRow, InCol).
+getPosition(InRow, InCol, OutRow, OutCol):-
+	OutCol is InCol,
+	OutRow is InRow.
 
 getPosition(InRow, InCol, OutRow, OutCol):-
 	InCol < 7,
@@ -329,31 +342,32 @@ validPosition(Player, Row, Col, Board, NewBoard):-
 	repulsion(NewBoard1, NewBoard, Row, Col),
 	!.
 
-move(Player, Board, NewBoard):-
+gen_move(Player, Board, NewBoard):-
 	getPosition(1,1,  OutRow, OutCol),
 	validPosition(Player, OutRow, OutCol, Board, NewBoard).
 
 
 is_empty(List):- List = []. %checks if list is empty
 
-isWinningMove(Board, Points, NewPoints, Player):-
+isWinningMove(Board, _, NewPoints, Player):-
 	symbol(Player, S),
 	checkthree(Board, S),
 	retract(winner(_)),
 	NewPoints is 1000.
 
-isWinningMove(Board, Points, Points, Player).
+isWinningMove(_, Points, NewPoints, _):-
+	NewPoints = Points.
 
 %--------------------------------check 2 in a row-----------------------
 
-find2inrowRow(Board, Player,6, 5, Points, Points).
+find2inrowRow(_, _,6, 5, Points, OutPoints):-
+	OutPoints = Points.
 
 
 find2inrowRow(Board, Player, Row, Col, Points, OutPoints):-
 	Row < 7,
 	Col < 6,
 	symbol(Player, S),
-	NewRow is Row+1,
 	NewCol is Col+1,
 	getSquarePiece(Col, Row, S1, Board),
 	getSquarePiece(NewCol, Row, S2, Board),
@@ -368,7 +382,8 @@ find2inrowRow(Board, Player, Row, Col, Points, OutPoints):- %	End of row
 
 
 
-find2inrowCol(Board, Player,5, 6, Points, Points).
+find2inrowCol(_, _,5, 6, Points, OutPoints):-
+	OutPoints = Points.
 
 
 find2inrowCol(Board, Player, Row, Col, Points, OutPoints):-
@@ -389,7 +404,8 @@ find2inrowCol(Board, Player, Row, Col, Points, OutPoints):-
 	find2inrowCol(Board, Player, NewRow, 1, Points, OutPoints).
 
 
-find2inrowRightDiagonal(Board, Player, 5, 6, Points, Points).
+find2inrowRightDiagonal(_, _, 5, 6, Points, OutPoints):-
+	OutPoints = Points.
 
 
 find2inrowRightDiagonal(Board, Player, Row, Col, Points, OutPoints):-
@@ -411,7 +427,7 @@ find2inrowRightDiagonal(Board, Player, Row, Col, Points, OutPoints):-
 	find2inrowRightDiagonal(Board, Player, NewRow, 1, Points, OutPoints).
 
 
-find2inrowLeftDiagonal(Board, Player, 2, 6, Points, OutPoints):-
+find2inrowLeftDiagonal(_, _, 2, 6, Points, OutPoints):-
 	OutPoints = Points.
 
 
@@ -434,7 +450,8 @@ find2inrowLeftDiagonal(Board, Player, Row, Col, Points, OutPoints):-
 
 
 %------------point system----------------------------------
-findNumPieces([], Points, _, Points).
+findNumPieces([], Points, _, OutPoints):-
+	OutPoints = Points.
 
 findNumPieces([H|FlattenBoard], Points, Symbol, OutPoints):-
 	(
@@ -442,42 +459,34 @@ findNumPieces([H|FlattenBoard], Points, Symbol, OutPoints):-
 	).
 
 
-evaluateBoards([], _, _, _, BoardSel, BoardSel).
+value(GameState, Player, Value):-
+	AuxBoard = GameState,
+	symbol(Player, SymbolPlayer),
+	find2inrowCol(GameState, Player, 1,1,0, PointsPlayer),
+	find2inrowRow(GameState, Player, 1,1, PointsPlayer, TempPointsPlayer),
+	find2inrowRightDiagonal(GameState, Player, 1,1, TempPointsPlayer ,TempPointsPlayer2),
+	find2inrowLeftDiagonal(GameState, Player, 6, 1, TempPointsPlayer2, NewPointsPlayer),
+	flatten(GameState, FlattenBoard1),
+	findNumPieces(FlattenBoard1, NewPointsPlayer, SymbolPlayer, PointsPlayer1),
+	isWinningMove(AuxBoard, PointsPlayer1, Value, Player).
+
+
+evaluateBoards([], _, _, _, BoardSel, OutBoards):-
+	OutBoards = BoardSel.
 
 
 evaluateBoards([H|ListBoards], Player, NextPlayer, Max, BoardsSel, OutBoards):-
 	%check for winning moves
-	AuxBoard = H,
-	symbol(Player, SymbolPlayer),
-	symbol(NextPlayer, SymbolOpponent),
+	value(H, Player, PointsPlayer),
+	value(H, NextPlayer, PointsOpponent),
 
-	find2inrowCol(H, Player, 1,1,0, PointsPlayer),
-	find2inrowCol(H, NextPlayer, 1,1,0, PointsOpponent),
-	find2inrowRow(H, Player, 1,1, PointsPlayer, TempPointsPlayer),
-	find2inrowRow(H, NextPlayer, 1,1, PointsOpponent, TempPointsOpponent),
-
-	find2inrowRightDiagonal(H, Player, 1,1, TempPointsPlayer ,TempPointsPlayer2),
-	find2inrowRightDiagonal(H, NextPlayer, 1,1, TempPointsOpponent, TempPointsOpponent2),
-
-	find2inrowLeftDiagonal(H, Player, 6, 1, TempPointsPlayer2, NewPointsPlayer),
-	find2inrowLeftDiagonal(H, NextPlayer, 6, 1, TempPointsOpponent2, NewPointsOpponent),
-
-	flatten(H, FlattenBoard1),
-	FlattenBoard2 = FlattenBoard1,
-	findNumPieces(FlattenBoard1, NewPointsPlayer, SymbolPlayer, PointsPlayer1),
-	findNumPieces(FlattenBoard2, NewPointsOpponent, SymbolOpponent, PointsOpponent1),
-
-	isWinningMove(AuxBoard, PointsPlayer1, PointsPlayer2, Player),
-	isWinningMove(AuxBoard, PointsOpponent1, PointsOpponent2, NextPlayer),
-
-
-	Balance is PointsPlayer2 - 3*PointsOpponent2,
+	Balance is PointsPlayer - 3*PointsOpponent,
 	
 	listBestMoves(Max, Balance, H, BoardsSel, NewListMoves, NewMax),
 	evaluateBoards(ListBoards, Player, NextPlayer, NewMax, NewListMoves, OutBoards).
 
 
-listBestMoves(CurrentMax, Balance, Board ,ListMoves, NewListMoves, NewMax):-
+listBestMoves(CurrentMax, Balance, Board ,_, NewListMoves, NewMax):-
 	Balance > CurrentMax,
 	NewMax is Balance,
 	NewListMoves = [Board]. %resets previous board
@@ -488,13 +497,12 @@ listBestMoves(CurrentMax, Balance, Board , ListMoves, NewListMoves, NewMax):-
 	append([Board], ListMoves, NewListMoves).
 
 
-listBestMoves(CurrentMax, Balance, Board ,ListMoves, NewListMoves, NewMax):- %	predicate never fails
+listBestMoves(CurrentMax, _, _ ,ListMoves, NewListMoves, NewMax):- %	predicate never fails
 	NewMax = CurrentMax,
 	NewListMoves = ListMoves.
 	
 	
 findBestMove(NewBoard, ListBoards, Player, NextPlayer):- 		%evaluates all moves in ListBoards matrix
-	AllBoards = ListBoards,
-	evaluateBoards(ListBoards, Player, NextPlayer, -2000, CurrentBoard, OutBoardSel),
+	evaluateBoards(ListBoards, Player, NextPlayer, -2000, _, OutBoardSel),
 	choose(OutBoardSel, NewBoard),
 	!.
