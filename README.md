@@ -1,4 +1,5 @@
 
+
   
 # PLOG 2020/2021 - TP1
 
@@ -27,6 +28,7 @@
  - [rules](https://s3.amazonaws.com/geekdo-files.com/bgg260437?response-content-disposition=inline%3B%20filename%3D%22Gekitai_Rules.pdf%22&response-content-type=application%2Fpdf&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJYFNCT7FKCE4O6TA%2F20201101%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201101T160235Z&X-Amz-SignedHeaders=host&X-Amz-Expires=120&X-Amz-Signature=9e06a7d642935f212181bfdeb63632a8fa21ebc2070973ab2fb2ae625009a0da)
 
 ----
+# Game Logic
 ## Internal representation of the GameState
 
 **Board**
@@ -155,6 +157,51 @@
 * Final State:
 		 ![Final State](img/final_state.png)
 
+## Valid moves list - [play.pl]([play.pl](./src/play.pl)) & [utils.pl]([utils.pl](./src/utils.pl))
+In order to obtain all the possible moves that the player can make, we implemented the predicate valid_moves(+GameState, +Player, -ListOfMoves):
+``
+valid_moves(GameState, Player, ListOfMoves):-
+findall(UpdatedBoard, gen_move(Player ,GameState, UpdatedBoard), ListOfMoves).
+``
+ In the valid_moves predicate, we call the findall predicate, tha lists all the possible moves, using the helper predicate ``gen_move``. This predicate iterates the board, placing the player's piece in any empty square.
+ This way, by calling the ``gen_move`` predicate inside the findall, ListOfMoves returns all the valid moves that can be made in the current game state.
+
+## Move execution - [input.pl]([input.pl](./src/input.pl)) & [play.pl]([play.pl](./src/play.pl))
+The validation and execution of the moves made by a human player is done using the predicate ``move(GameState, Move, NewGameState)``.
+This predicate receives in Move, a list containing the row, column and the player to move, received in the predicate ``playMove(Player, NextPlayer, State, NewState)``, that reads the user input containing the information about the row and column where the player wants to place his piece.
+After placing the piece in the board, all there is left to do is to process consequent repulsions.
+
+## Game Over - [play.pl]([play.pl](./src/play.pl)) & [utils.pl]([utils.pl](./src/utils.pl))
+The game_loop predicate needs an end condition. In this case, when a player wins the game, the game loop ends and a message is printed to the console containing the information about the winner. 
+To process the game over verification, we implemented the ``game_over(GameState, Winner)``, that calls upon 
+the ``checkWin(Board,Piece)`` that looks for 3 in a row appearances or 8 pieces on the board for each player.
+* The 3 in a row verification is done by calling the ``checkAllRowsCols(7,7,Board,Piece)``, that iterates the whole board, looking for three pieces in a row;
+* To verify the number of pieces from each player, we call ``verifyPieces(BoardList, 1, Piece, 8)``, that recieves a flatten board and returns success in case the player has 8 pieces on the board.
+
+
+## Board Evaluation - utils.pl]([utils.pl](./src/utils.pl))
+Since Gekitai does not have a points system, we implemented one of our own, that is used for finding the best PC move, given a list of possible moves. The points system implemented has in consideration the following situations:
+* The player has 2 pieces in a row in any direction: in this case, for each occurrence, we increment 40 points to the respective player. This verification is done by calling the helper predicates ``find2inrowCol``, ``find2inrowRow``, ``find2inrowRightDiagonal`` and ``find2inrowLeftDiagonal``;
+* The number of pieces from a player is changed after a move is made. Each piece is worth 2 points and the number of pieces is counted by the predicate ``findNumPieces(FlattenBoard1, NewPointsPlayer, SymbolPlayer, PointsPlayer1)``;
+* Last and most importantly, if a move wins the game, it is given 1000 points, since it's obviously the best move in any situation.
+
+## Computer Move - [input.pl]([input.pl](./src/input.pl)) & [play.pl]([play.pl](./src/play.pl))
+As specified, we implemented 2 levels of difficulty in the game: 'easy' and 'hard'.
+In order to handle the computer moves, the predicate ``choose_move(GameState, Player, Level, Move)``.
+The third argument received by this predicate dictates its behaviour. This way, ``choose_move(GameState, Player, easy, Move)`` returns in Move the game state containing the move made by the computer in easy mode, for example.
+* The easy mode is pretty straight forward: the computer generates all possible moves, using the ``valid_moves`` predicate and chooses a random element from that list (ListOfMoves), using ``choose(List, Elt)``;
+* The hard mode is a bit more sofisticated: the computer evaluates all the possible boards (ListOfMoves), using the points system previously described. The evaluation of the boards is done by the predicate ``evaluateBoards(ListBoards, Player, NextPlayer, Max, BoardsSel, OutBoards)``, responsible for returning in OutBoards, a list containing the game states with the most amount of points. This predicate is called by ``findBestMove(NewBoard, ListBoards, Player, NextPlayer)``. After reveiving the list with the best moves, all we need to do is choose (randomly) a list from that list.
+
+## Conclusions
+
+The development of this project was hard at first, since we did not have much knowledge about the Prolog programming language . However, during the weeks, we began to understand the language and its syntax better. It is safe to say that the development of this project was a big step in order to improve our understanding of Prolog.
+As for bugs or other known issues in the final version of the game, we didn't find any.
+There are some improvements that could have been made in the game, most specificly in the artificial intelligence of the game: in the final version, we could improve the evaluation predicate, so that it considers more moves ahead instead of just evaluating the current move, improving the quality of the moves made by the computer.
+
+## Bibliography
+* [SWI-Prolog](https://www.swi-prolog.org/);
+* [SICStus Prolog Documentation](https://sicstus.sics.se/sicstus/docs/latest4/pdf/sicstus.pdf)
+*  Moodle slides.
 
 ## Notes
 
