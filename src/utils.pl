@@ -129,12 +129,10 @@ checkAllRowsCols(Row,Col,Board,Piece):-
 
 %--------------------------Repulsions-------------------------------%
 
-checkTopLeftPiece(Board,NewBoard,1,_):-
-	NewBoard = Board.
+checkTopLeftPiece(Board,Board,1,_).
 
 
-checkTopLeftPiece(Board,NewBoard,_,1):-
-	NewBoard = Board.
+checkTopLeftPiece(Board,Board,_,1).
 
 
 checkTopLeftPiece(Board, NewBoard, Row, Column):-
@@ -158,8 +156,7 @@ checkTopLeftPiece(Board, NewBoard, Row, Column):-
 	makeMove(Board, AuxRow, AuxCol, 'empty', NewBoard).
 
 
-checkTopPiece(Board, NewBoard, 1, _):-
-	NewBoard = Board.
+checkTopPiece(Board, Board, 1, _).
 
 checkTopPiece(Board, NewBoard, Row, Column):-
 	Row > 2,
@@ -177,12 +174,10 @@ checkTopPiece(Board, NewBoard, Row, Column):-
 	makeMove(Board, AuxRow, Column, 'empty', NewBoard).
 
 
-checkTopRightPiece(Board, NewBoard, 1, _):-
-	NewBoard = Board.
+checkTopRightPiece(Board, Board, 1, _).
 
 
-checkTopRightPiece(Board, NewBoard, _, 6):-
-	NewBoard = Board.
+checkTopRightPiece(Board, Board, _, 6).
 
 checkTopRightPiece(Board, NewBoard, Row, Column):-
 	Column < 5,
@@ -204,8 +199,7 @@ checkTopRightPiece(Board, NewBoard, Row, Column):-
 	AuxRow is Row - 1,
 	makeMove(Board, AuxRow, AuxCol, 'empty', NewBoard).
 
-checkRightPiece(Board, NewBoard, _, 6):-
-	NewBoard = Board.
+checkRightPiece(Board, Board, _, 6).
 
 checkRightPiece(Board, NewBoard, Row, Column):-
 	Column < 5,
@@ -222,11 +216,9 @@ checkRightPiece(Board, NewBoard, Row, Column):-
 	AuxCol is Column + 1,
 	makeMove(Board, Row, AuxCol, 'empty', NewBoard).
 
-checkBottomRightPiece(Board, NewBoard, 6, _):-
-	NewBoard = Board.
+checkBottomRightPiece(Board, Board, 6, _).
 
-checkBottomRightPiece(Board, NewBoard, _, 6):-
-	NewBoard = Board.
+checkBottomRightPiece(Board, Board, _, 6).
 
 checkBottomRightPiece(Board, NewBoard, Row, Column):-
 	Column < 5,
@@ -248,8 +240,7 @@ checkBottomRightPiece(Board, NewBoard, Row, Column):-
 	AuxRow is Row + 1,
 	makeMove(Board, AuxRow, AuxCol, 'empty', NewBoard).
 
-checkBottomPiece(Board, NewBoard, 6, _):-
-	NewBoard = Board.
+checkBottomPiece(Board, Board, 6, _).
 
 checkBottomPiece(Board, NewBoard, Row, Column):-
 	Row < 5,
@@ -269,8 +260,7 @@ checkBottomPiece(Board, NewBoard, Row, Column):-
 checkBottomLeftPiece(Board, NewBoard, 6, _):-
 	NewBoard = Board.
 
-checkBottomLeftPiece(Board, NewBoard, _, 1):-
-	NewBoard = Board.
+checkBottomLeftPiece(Board, Board, _, 1).
 
 checkBottomLeftPiece(Board, NewBoard, Row, Column):-
 	Column > 2,
@@ -292,8 +282,7 @@ checkBottomLeftPiece(Board, NewBoard, Row, Column):-
 	AuxRow is Row + 1,
 	makeMove(Board, AuxRow, AuxCol, 'empty', NewBoard).
 
-checkLeftPiece(Board, NewBoard, _, 1):-
-	NewBoard = Board.
+checkLeftPiece(Board, Board, _, 1).
 
 checkLeftPiece(Board, NewBoard, Row, Column):-
 	Column > 2,
@@ -318,9 +307,7 @@ choose(List, Elt) :-
     random(0, Length, Index),
     nth0(Index, List, Elt).
 
-getPosition(InRow, InCol, OutRow, OutCol):-
-	OutCol is InCol,
-	OutRow is InRow.
+getPosition(InRow, InCol, InRow, InCol).
 
 getPosition(InRow, InCol, OutRow, OutCol):-
 	InCol < 7,
@@ -355,13 +342,11 @@ isWinningMove(Board, Points, NewPoints, Player):-
 	retract(winner(_)),
 	NewPoints is 1000.
 
-isWinningMove(Board, Points, NewPoints, Player):-
-	NewPoints = Points.
+isWinningMove(Board, Points, Points, Player).
 
 %--------------------------------check 2 in a row-----------------------
 
-find2inrowRow(Board, Player,6, 5, Points, OutPoints):-
-	OutPoints = Points.
+find2inrowRow(Board, Player,6, 5, Points, Points).
 
 
 find2inrowRow(Board, Player, Row, Col, Points, OutPoints):-
@@ -383,8 +368,7 @@ find2inrowRow(Board, Player, Row, Col, Points, OutPoints):- %	End of row
 
 
 
-find2inrowCol(Board, Player,5, 6, Points, OutPoints):-
-	OutPoints = Points.
+find2inrowCol(Board, Player,5, 6, Points, Points).
 
 
 find2inrowCol(Board, Player, Row, Col, Points, OutPoints):-
@@ -405,8 +389,7 @@ find2inrowCol(Board, Player, Row, Col, Points, OutPoints):-
 	find2inrowCol(Board, Player, NewRow, 1, Points, OutPoints).
 
 
-find2inrowRightDiagonal(Board, Player, 5, 6, Points, OutPoints):-
-	OutPoints = Points.
+find2inrowRightDiagonal(Board, Player, 5, 6, Points, Points).
 
 
 find2inrowRightDiagonal(Board, Player, Row, Col, Points, OutPoints):-
@@ -451,8 +434,7 @@ find2inrowLeftDiagonal(Board, Player, Row, Col, Points, OutPoints):-
 
 
 %------------point system----------------------------------
-findNumPieces([], Points, _, OutPoints):-
-	OutPoints = Points.
+findNumPieces([], Points, _, Points).
 
 findNumPieces([H|FlattenBoard], Points, Symbol, OutPoints):-
 	(
@@ -460,8 +442,7 @@ findNumPieces([H|FlattenBoard], Points, Symbol, OutPoints):-
 	).
 
 
-evaluateBoards([], _, _, _, BoardSel, OutBoards):-
-	OutBoards = BoardSel.
+evaluateBoards([], _, _, _, BoardSel, BoardSel).
 
 
 evaluateBoards([H|ListBoards], Player, NextPlayer, Max, BoardsSel, OutBoards):-
