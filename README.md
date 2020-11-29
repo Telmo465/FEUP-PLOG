@@ -182,15 +182,18 @@ In case one of these conditions is met, Winner assumes the value of the respecti
 
 
 ## Board Evaluation - [utils.pl](./src/utils.pl)
-Since Gekitai does not have a points system, we implemented one of our own, that is used for finding the best PC move, given a list of possible moves. The points system implemented has in consideration the following situations:
+Since Gekitai does not have a points system, we implemented one of our own, that is used for finding the best PC move, given a list of possible moves. The calculation of the poinst associated with each board is done by the predicate ``value(GameState, Player, Value)`` . The points system implemented has in consideration the following situations:
 * The player has 2 pieces in a row in any direction: in this case, for each occurrence, we increment 40 points to the respective player. This verification is done by calling the helper predicates ``find2inrowCol``, ``find2inrowRow``, ``find2inrowRightDiagonal`` and ``find2inrowLeftDiagonal``;
 * The number of pieces from a player is changed after a move is made. Each piece is worth 2 points and the number of pieces is counted by the predicate ``findNumPieces(FlattenBoard1, NewPointsPlayer, SymbolPlayer, PointsPlayer1)``;
 * Last and most importantly, if a move wins the game, it is given 1000 points, since it's obviously the best move in any situation.
 
+The evaluation of the board also considers the amount of points related to the opponent: calling the predicate ``value(GameState, Player, Value)`` described above to evaluate the opponent's side of the board.
+This algorithm allows that the best boards are the ones with the most amount of points for the player, and the less amount of points for the opponent.
+
 ## Computer Move - [input.pl](./src/input.pl) & [play.pl](./src/play.pl)
 As specified, we implemented 2 levels of difficulty in the game: 'easy' and 'hard'.
 The predicate ``choose_move(GameState, Player, Level, Move)`` handles all computer moves.
-The third argument received by this predicate dictates its behaviour. This way, ``choose_move(GameState, Player, easy, Move)`` returns in Move the game state containing the move made by the computer in easy mode, for example.
+The third argument received by this predicate dictates its behaviour. This way, ``choose_move`` returns in Move the game state containing the move made by the computer in easy mode, for example.
 * The easy mode is pretty straight forward: the computer generates all possible moves, using the ``valid_moves`` predicate and chooses a random element from that list (ListOfMoves), using ``choose(List, Elt)``;
 * The hard mode is a bit more sofisticated: the computer evaluates all the possible boards (ListOfMoves), using the points system previously described. The evaluation of the boards is done by the predicate ``evaluateBoards(ListBoards, Player, NextPlayer, Max, BoardsSel, OutBoards)``, responsible for returning in OutBoards, a list containing the game states with the most amount of points. This predicate is called by ``findBestMove(NewBoard, ListBoards, Player, NextPlayer)``. After reveiving the list with the best moves, all we need to do is choose (randomly) a game state from that list.
 

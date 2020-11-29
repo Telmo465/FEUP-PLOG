@@ -342,7 +342,7 @@ validPosition(Player, Row, Col, Board, NewBoard):-
 	repulsion(NewBoard1, NewBoard, Row, Col),
 	!.
 
-gen_move(Player, Board, NewBoard):-
+gen_move(Player, Board, NewBoard):- %makes a valid move
 	getPosition(1,1, OutRow, OutCol),
 	validPosition(Player, OutRow, OutCol, Board, NewBoard).
 
@@ -450,7 +450,7 @@ find2inrowLeftDiagonal(Board, Player, Row, Col, Points, OutPoints):-
 
 
 %------------point system----------------------------------
-findNumPieces([], Points, _, OutPoints):-
+findNumPieces([], Points, _, OutPoints):- 
 	OutPoints = Points.
 
 findNumPieces([H|FlattenBoard], Points, Symbol, OutPoints):-
@@ -459,7 +459,7 @@ findNumPieces([H|FlattenBoard], Points, Symbol, OutPoints):-
 	).
 
 
-value(GameState, Player, Value):-
+value(GameState, Player, Value):- % evaluates game state
 	AuxBoard = GameState,
 	symbol(Player, SymbolPlayer),
 	find2inrowCol(GameState, Player, 1,1,0, PointsPlayer),
@@ -482,7 +482,7 @@ evaluateBoards([H|ListBoards], Player, NextPlayer, Max, BoardsSel, OutBoards):-
 
 	Balance is PointsPlayer - 3*PointsOpponent,
 	
-	listBestMoves(Max, Balance, H, BoardsSel, NewListMoves, NewMax),
+	listBestMoves(Max, Balance, H, BoardsSel, NewListMoves, NewMax), %list the moves with the most amount of points
 	evaluateBoards(ListBoards, Player, NextPlayer, NewMax, NewListMoves, OutBoards).
 
 

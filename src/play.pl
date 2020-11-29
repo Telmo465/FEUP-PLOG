@@ -18,7 +18,8 @@ game_loop('BOT1', 'BOT1'):- %implements the main loop of the game
 	assert(state(1, GameState)),
 	repeat,
 		retract(state(Player, Board)),
-		generatePCmove(Player, NextPlayer ,Board, NewBoard), %replaces an empty cell with the respective player piece
+		choose_move(Board ,Player, hard, NewBoard), 
+		updatePlayer(Player, NextPlayer),
 		assert(state(NextPlayer, NewBoard)),
 		once(display_game(NewBoard, NextPlayer)), % displays the current state of the board
 		game_over(NewBoard, Winner),% checks if the game has ended
@@ -26,19 +27,6 @@ game_loop('BOT1', 'BOT1'):- %implements the main loop of the game
 	retract(state(_,_)),
 	endGame.
 
-%game loop --> PC x PC
-game_loop('BOT2', 'BOT2'):- %implements the main loop of the game
-	initial(GameState),
-	assert(state(1, GameState)),
-	repeat,
-		retract(state(Player, Board)),
-		choose_move(Board ,Player, easy, NewBoard), 
-		updatePlayer(Player, NextPlayer),
-		assert(state(NextPlayer, NewBoard)),
-		once(display_game(NewBoard, NextPlayer)), % displays the current state of the board
-		game_over(NewBoard, _),% checks if the game has ended
-	retract(state(_,_)),
-	endGame.
 
 %game loop --> Human x PC Hard
 game_loop('Player', 'BOT1'):- %implements the main loop of the game
@@ -50,7 +38,6 @@ game_loop('Player', 'BOT1'):- %implements the main loop of the game
 		(
 			((Player =:= 1) -> once(playMove(Player, NextPlayer ,Board, NewBoard))) ; (choose_move(Board ,Player, hard, NewBoard), updatePlayer(Player, NextPlayer))
 		),
-		%generatePCmove(Player, NextPlayer ,Board, NewBoard), %replaces an empty cell with the respective player piece
 		assert(state(NextPlayer, NewBoard)),
 		once(display_game(NewBoard, NextPlayer)), % displays the current state of the board
 		game_over(NewBoard, Winner),% checks if the game has ended
@@ -129,23 +116,9 @@ updatePlayer(Player, NextPlayer):-
 		)
 	).
 
-generatePCmove(Player ,NextPlayer, Board, NewBoard):- 
-	valid_moves(Board, Player, ListBoards),
-	(
-		(Player =:= 1,
-		NextPlayer is 2
-		);
 
-		(Player =:= 2,
-			NextPlayer is 1
-		)
-	),	
-
-	findBestMove(NewBoard, ListBoards, Player, NextPlayer),
-	!.
-
-
-choose_move(GameState, Player, easy, Move):-
+ %choose PC move
+choose_move(GameState, Player, easy, Move):- %choose PC move
 	valid_moves(GameState, Player, ListBoards),
 	choose(ListBoards, Move).
 
@@ -172,7 +145,7 @@ checkWin(Board,Piece):- % Three in a row
 	checkAllRowsCols(7,7,Board,Piece),
 	assert(winner(Piece)).
 
-checkWin(Board,Piece):-
+checkWin(Board,Piece):- %Succeeds if there are 8 Pieces on the board
 	flatten(Board, BoardList),
 	verifyPieces(BoardList, 1, Piece, 8),
 	assert(winner(Piece)).
