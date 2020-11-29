@@ -18,7 +18,17 @@
  - Gekitai is a 2-person strategy game created in 2020. It consists of two players, each with 8 pieces of a color that represents them, played on a 6 by 6 board where each player can place their pieces, one at a time in an empty space.
  - In order to win, one of the players must align 3 of their pieces in a row horizontally, vertically or in diagonal, or to have their 8 pieces on the board after making a move.
  -   However, it is not that easy to reach the goal because whenever a piece is placed, it “pushes” any adjacent piece that is free (not aligned by two or more pieces), pieces that fall from the board return to the players.
- - 
+ 
+ ## Instalation and execution
+
+* In order to execute the program, please follow the next steps:
+	- Install and and run SICStus Prolog
+	-    Go to File > Working Directory and navigate to the  _src_  folder where you downloaded the code.
+	-    Go to File > Consult and select the file ``gekitai.pl``;
+	- type "play." to start the game;
+		-  The row inputs are given as numbers (1 - 6),
+		- The column inputs are given as letters ('A' - 'F');
+
 	**Material**  
 		- Board 6 * 6;  
 		- 16 Markers (8 of each color);
@@ -207,16 +217,3 @@ There are some improvements that could have been made in the game, most specific
 * [SWI-Prolog](https://www.swi-prolog.org/);
 * [SICStus Prolog Documentation](https://sicstus.sics.se/sicstus/docs/latest4/pdf/sicstus.pdf)
 *  Moodle slides.
-
-## Notes
-
-* In order to execute the program, please follow the next steps:
-	- load src/gekitai.pl in SICStus;
-	- type "play." to start the game;
-		-  The row inputs are given as numbers (1 - 6),
-		- The column inputs are given as letters ('A' - 'F');
-	- We implemented the following predicates to display possible boards that might occur during a game.
-		- type "initial." to display the initial state of the board;
-		- type "intermediate." to display the intermediate state of the board;
-		- type "final." to display the final state of the board;
- 
