@@ -1,5 +1,6 @@
 :-use_module(library(clpfd)).
 :-use_module(library(lists)).
+:- use_module(library(random)).
 
 /*
    [   [red,yellow,yellow,green],
@@ -18,9 +19,10 @@ flatten([L|Ls], FlatL) :-
     append(NewL, NewLs, FlatL).
 flatten(L, [L]).
 
-list([[red,yellow,yellow,green],
-    [white,red,white],
-     [green,white],
+list([[red,red,yellow,white, green],
+    [yellow,white,white, white],
+     [white,green, white],
+      [white, white],
       [white]
 ]).
 
@@ -106,8 +108,8 @@ getCell(Index ,SubList, PreviousSubList, SubListLen):-
     getCell(NIndex, SubList, PreviousSubList, SubListLen).
 
 
-solver(Output):-
-    list(List),
+solver(List):-
+    %list(List),
     flatten(List, FlatList1),
     FlatList2 = FlatList1,
     %write(FlatList), nl,
@@ -126,10 +128,7 @@ solver(Output):-
     
     getColors(List1, Output, [], List1, ColorList),
 
-    %write(ColorList),
     getWhiteCells(Output, [], FinalList, ColorList),
-    %write(FinalList),nl,
-    %write(List),
     displayOutput(List, ColorList, FinalList,[], FinalSolution),
     write(FinalSolution).
     
@@ -189,7 +188,7 @@ displayOutput([], ColorList, WhiteList, FinalSolution, FinalSolution).
 displayOutput([Row|List], ColorList, WhiteList, Solution, FinalSolution):-
     displayRows(Row, ColorList, WhiteList, [], FinalRow, NewWhiteList),
     append(Solution, [FinalRow], NewFinalSolution),
-    write(FinalRow),nl,
+    %write(FinalRow),nl,
     displayOutput(List, ColorList, NewWhiteList, NewFinalSolution, FinalSolution).
 
 
@@ -210,3 +209,96 @@ displayRows([white|Row], ColorList, [H|WhiteList], RowList, FinalRow, NewWhiteLi
     
 
     
+/*  Generate problems */
+
+randomLabelingValues(Var, _Rest, BB, BB1) :-
+    fd_set(Var, Set),
+    select_best_value(Set, Value),
+    (   
+        first_bound(BB, BB1), Var #= Value
+        ;   
+        later_bound(BB, BB1), Var #\= Value
+    ).
+
+select_best_value(Set, BestValue):-
+    fdset_to_list(Set, Lista),
+    length(Lista, Len),
+    random(0, Len, RandomIndex),
+    nth0(RandomIndex, Lista, BestValue).
+
+
+
+getSubList(_,0,_).
+getSubList(Input,N,It):-
+    nth0(It, Input, SubL),
+    length(SubL,N),
+    NewN is N-1, NewIt is It+1,
+    getSubList(Input,NewN,NewIt).
+
+
+
+
+generator(N, List):-
+    getSubList(List, N, 0),
+    append(List, FlatList),
+    length(FlatList, FlatLen),    
+    applyColors(FlatList, 0, FlatLen),
+    (
+    ((N =< 4) ->(R2 is 1)) ; ((N < 7) -> R2 is 2 ; fail)
+    ),
+    global_cardinality(FlatList, [1-R2,2-R2,3-R2,4-_]),
+    placeColorsInList(List, 0, [], Output1, N),
+
+
+    flatten(Output1, FlatList1),
+    length(Output1, NumRows),
+    domain([R,G,Y], 1,2000),
+    placeColorsConstraints(0, ColouredList, NumRows, Output1, [R,G,Y]),
+    applyConstraints(ColouredList),
+    term_variables(ColouredList, Output),
+    all_distinct(Output),
+    
+    labeling([value(randomLabelingValues)], Output),
+
+    once(removeAllExceptWhite(FlatList1, [], List1)),
+    once(getColors(List1, Output, [], List1, ColorList)),
+    once(getWhiteCells(Output, [], FinalList, ColorList)),
+    once(displayOutput(Output1, ColorList, FinalList,[], FinalSolution)),
+    write(FinalSolution).
+
+
+applyColors(_, Len, Len).
+applyColors(FlatList, Index, Len):-
+    nth0(Index, FlatList, Elem),
+    Elem in 1..4,
+    NIndex is Index + 1,
+    applyColors(FlatList, NIndex, Len).
+
+
+placeColorsInList(_, ListLen, Output, Output, ListLen).
+placeColorsInList(List, RowNum, FinalList, Output, ListLen):-
+    nth0(RowNum, List, SubL),
+    length(SubL, Len),
+    iterateSubL(SubL, 0, Len, [], NewSubL),
+    %write(NewSubL),
+    append(FinalList, [NewSubL], NewFinalList),
+
+    NewRowNum is RowNum + 1,
+    placeColorsInList(List, NewRowNum, NewFinalList, Output, ListLen).
+    
+    
+
+iterateSubL(_, Len, Len, Output, Output).
+iterateSubL(SubL, Index, Len, ColorList, Output):-
+    nth0(Index, SubL, Elem),
+    getColor(Elem, Color),
+    append(ColorList, [Color], NewColorList),
+    NIndex is Index + 1,
+    iterateSubL(SubL, NIndex, Len, NewColorList, Output).
+    
+
+
+getColor(1,red).
+getColor(2,green).
+getColor(3,yellow).
+getColor(4,white).
